@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
 import { Upload, Check, AlertCircle, ArrowLeft, Image as ImageIcon, X } from 'lucide-react';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const BlogPostUploader = () => {
   // State for form inputs
@@ -60,6 +59,46 @@ const BlogPostUploader = () => {
     setImageUploadProgress(0);
   };
 
+  // Upload image to Cloudinary
+  const uploadToCloudinary = async (file) => {
+    setDebugInfo("Preparing to upload image to Cloudinary...");
+    
+    // Create form data for upload
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'blog_uploads'); // You'll need to create this upload preset in your Cloudinary dashboard
+    
+    try {
+      setDebugInfo("Uploading to Cloudinary...");
+      setImageUploadProgress(30);
+      
+      // Make API request to Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/ddq9cwjkr/image/upload`, // Replace YOUR_CLOUD_NAME with your Cloudinary cloud name
+        {
+          method: 'POST',
+          body: formData
+        }
+      );
+      
+      setImageUploadProgress(60);
+      
+      if (!response.ok) {
+        throw new Error(`Cloudinary upload failed with status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setImageUploadProgress(100);
+      setDebugInfo(`Image uploaded to Cloudinary successfully! URL: ${data.secure_url.substring(0, 20)}...`);
+      
+      return data.secure_url; // Return the secure URL for the uploaded image
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      setDebugInfo(`Cloudinary upload error: ${error.message}`);
+      throw error;
+    }
+  };
+
   // Function to handle post submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,63 +116,40 @@ const BlogPostUploader = () => {
     setDebugInfo("Starting post submission...");
 
     try {
-      // First, attempt to create a post WITHOUT the image
-      // This will help us determine if the issue is with Firebase Storage or Firestore
-      const db = getFirestore();
+      let imageUrl = null;
       
-      setDebugInfo("Creating post in Firestore (without image)...");
+      // First, upload the image to Cloudinary if one is selected
+      if (imageFile) {
+        try {
+          imageUrl = await uploadToCloudinary(imageFile);
+          setDebugInfo(`Image upload successful: ${imageUrl.substring(0, 20)}...`);
+        } catch (imageError) {
+          console.error("Error with image upload:", imageError);
+          setDebugInfo(`Image upload failed: ${imageError.message}`);
+          
+          setNotification({
+            type: 'warning',
+            message: 'Image upload failed. Proceeding without image.'
+          });
+          setTimeout(() => setNotification(null), 3000);
+          // Continue without image
+        }
+      }
+      
+      // Now create the post in Firestore with or without the image URL
+      const db = getFirestore();
+      setDebugInfo("Creating post in Firestore...");
       
       const docRef = await addDoc(collection(db, "blogPosts"), {
         content,
         readTime,
-        imageUrl: null, // Initially set to null
+        imageUrl, // This will be either the Cloudinary URL or null
         timestamp: serverTimestamp(),
         likes: 0,
         likedBy: []
       });
       
-      setDebugInfo(`Post created with ID: ${docRef.id}, now handling image...`);
-      
-      // If we got here, basic Firestore writing works
-      // Now try to upload the image if there is one
-      if (imageFile) {
-        try {
-          setDebugInfo("Getting storage reference...");
-          const storage = getStorage();
-          const storageRef = ref(storage, `blog-images/${Date.now()}_${imageFile.name}`);
-          
-          setDebugInfo("Uploading image to Firebase Storage...");
-          await uploadBytes(storageRef, imageFile);
-          
-          setDebugInfo("Getting download URL...");
-          const imageUrl = await getDownloadURL(storageRef);
-          
-          setDebugInfo(`Image uploaded successfully, URL: ${imageUrl.substring(0, 20)}...`);
-          
-          // Update the post with the image URL
-          setDebugInfo(`Updating post ${docRef.id} with image URL...`);
-          
-          // Here you would update the post with the image URL
-          // For now, let's just log that we would do this
-          console.log("Would update post with image URL:", imageUrl);
-          
-          // Note: In a production app, you would update the Firestore document with the URL
-          // using a transaction or update operation
-        } catch (imageError) {
-          console.error("Error with image:", imageError);
-          setDebugInfo(`Image upload failed: ${imageError.message}`);
-          
-          // Still consider the post creation successful since the text was saved
-          setNotification({
-            type: 'warning',
-            message: 'Post created but image upload failed. Please try again later.'
-          });
-          setTimeout(() => setNotification(null), 5000);
-          return;
-        }
-      }
-
-      setDebugInfo("Post creation complete!");
+      setDebugInfo(`Post created successfully with ID: ${docRef.id}`);
       setNotification({
         type: 'success',
         message: 'Post published successfully!'
@@ -344,6 +360,19 @@ const BlogPostUploader = () => {
                   )}
                 </div>
               </div>
+              
+              {/* Upload progress indicator */}
+              {imageUploadProgress > 0 && imageUploadProgress < 100 && (
+                <div className="mt-2">
+                  <div className="w-full bg-white/10 rounded-full h-2">
+                    <div 
+                      className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${imageUploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-white/60 text-xs mt-1">Uploading: {imageUploadProgress}%</p>
+                </div>
+              )}
             </div>
             
             <div>
@@ -382,19 +411,18 @@ const BlogPostUploader = () => {
               </button>
               
              <button
-  type="button"
-  onClick={handleSubmitWithoutImage}
-  disabled={isSubmitting}
-  className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-gray-800/50 disabled:cursor-not-allowed flex items-center justify-center"
->
-  {isSubmitting ? (
-    <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-  ) : (
-    "Skip Image"
-  )}
+              type="button"
+              onClick={handleSubmitWithoutImage}
+              disabled={isSubmitting}
+              className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-gray-800/50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+              ) : (
+                "Skip Image"
+              )}
               </button>
-
-</div>
+            </div>
           </form>
         </div>
         
