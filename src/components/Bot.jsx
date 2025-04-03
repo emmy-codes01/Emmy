@@ -1020,7 +1020,8 @@ const Chatbot = () => {
 
 "we need a different approach": "Emmy is flexible and adaptable! What different direction would you like to explore?",
 
-"I changed my mind": "That happens in creative work! Emmy can pivot based on your new thinking. What's your current vision?",
+    "I changed my mind": "That happens in creative work! Emmy can pivot based on your new thinking. What's your current vision?",
+    "you are mad": "God will punish you for me",
 
 
 
@@ -1103,6 +1104,7 @@ const inappropriateTerms = [
   "nincompoop",
   "pissflaps",
   "pisshead",
+  "mad",
   "poopface",
   "pussylicker",
   "rimjob",

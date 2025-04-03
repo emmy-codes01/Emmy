@@ -343,7 +343,7 @@ const currentYear = new Date().getFullYear();
             Let's <br /> work <span className='text-indigo-400'>together.</span>
           </p>
 
-          <Link to="/success-stories" className='bg-white/4 p-2 px-3 rounded-full mt-6 shadow-md shadow-indigo-500 text-xs animate-float'>
+          <Link to="/reviews" className='bg-white/4 p-2 px-3 rounded-full mt-6 shadow-md shadow-indigo-500 text-xs animate-float'>
               <span className='flex flex-row gap-1'>
                 <Users size={18} />
              Reviews

@@ -66,12 +66,12 @@ const BottomSheetNotification = () => {
   </Link>
 
   <Link 
-          to="/success-stories"
+          to="/reviews"
           onClick={handleClose}
     className="bg-indigo-700 hover:bg-indigo-600 text-white py-3 px-4 rounded-2xl flex items-center justify-center font-semibold transition-colors"
   >
     <Users className="mr-2" size={18} />
-    Clients' Success Stories
+    What my clients have to say
   </Link>
 </div>
 

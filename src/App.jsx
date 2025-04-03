@@ -22,6 +22,7 @@ import Konnex from './pages/Konnex';
 import Kronik from './pages/Kronik';
 import Blog from './pages/Blog'
 import Chatbot from './components/Bot';
+import NotFound from './components/NotFound';
 import BlogPostUploader from './pages/BlogPostUploader'
 
 
@@ -54,18 +55,18 @@ const App = () => {
     
     // If you're using the ScrollReveal package
     if (typeof ScrollReveal !== 'undefined') {
-      const sr = ScrollReveal();
+      // const sr = ScrollReveal();
       
       // Add more specific animations as needed
-      sr.reveal('.reveal-left', {
-        origin: 'left',
-        delay: 300
-      });
+      // sr.reveal('.reveal-left', {
+      //   origin: 'left',
+      //   delay: 300
+      // });
       
-      sr.reveal('.reveal-right', {
-        origin: 'right',
-        delay: 300
-      });
+      // sr.reveal('.reveal-right', {
+      //   origin: 'right',
+      //   delay: 300
+      // });
       
       scrollRevealInitialized.current = true;
     }
@@ -147,8 +148,9 @@ const App = () => {
             <Route path="/projects/logos&brand-designs/kronik" element={<Kronik />} />
             <Route path="/projects/websites" element={<Websites />} />
             <Route path="/clients" element={<Clients />} />
-            <Route path="/success-stories" element={<LiveChat />} />
+            <Route path="/reviews" element={<LiveChat />} />
             <Route path="/blogs" element={<Blog />} />
+             <Route path="*" element={<NotFound />} />
             {/* <Route path="/bot" element={<Chatbot />} /> */}
             <Route path="/upload-blog" element={<BlogPostUploader/>} />
             <Route path="/projects/graphic-designs" element={<Graphics />} />
