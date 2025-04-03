@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
-import { Upload, Check, AlertCircle, ArrowLeft, Image as ImageIcon, X, Plus } from 'lucide-react';
+import { Upload, Check, AlertCircle, ArrowLeft, Image as ImageIcon, X } from 'lucide-react';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 const BlogPostUploader = () => {
@@ -10,81 +10,68 @@ const BlogPostUploader = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState(null);
   
-  // State for multiple image handling
-  const [imageFiles, setImageFiles] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
-  const [currentUploadIndex, setCurrentUploadIndex] = useState(0);
+  // State for image handling
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(0);
   // Debug state
   const [debugInfo, setDebugInfo] = useState(null);
 
   // Handle image selection
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-    // Check each file
-    const validFiles = files.filter(file => {
-      // Check file type
-      if (!file.type.match('image.*')) {
-        setNotification({
-          type: 'warning',
-          message: `File ${file.name} is not an image and will be skipped.`
-        });
-        setTimeout(() => setNotification(null), 3000);
-        return false;
-      }
+    // Check file type
+    if (!file.type.match('image.*')) {
+      setNotification({
+        type: 'error',
+        message: 'Please select an image file.'
+      });
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
 
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setNotification({
-          type: 'warning',
-          message: `Image ${file.name} is larger than 5MB and will be skipped.`
-        });
-        setTimeout(() => setNotification(null), 3000);
-        return false;
-      }
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setNotification({
+        type: 'error',
+        message: 'Image must be smaller than 5MB.'
+      });
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
 
-      return true;
-    });
-
-    if (validFiles.length === 0) return;
-
-    // Add new files to existing ones
-    setImageFiles(prev => [...prev, ...validFiles]);
+    setImageFile(file);
     
-    // Create previews for new files
-    validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreviews(prev => [...prev, e.target.result]);
-      };
-      reader.readAsDataURL(file);
-    });
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  // Remove a specific image
-  const removeImage = (index) => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
-    setImagePreviews(prev => prev.filter((_, i) => i !== index));
-  };
-
-  // Remove all images
-  const removeAllImages = () => {
-    setImageFiles([]);
-    setImagePreviews([]);
+  // Remove selected image
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
     setImageUploadProgress(0);
-    setCurrentUploadIndex(0);
   };
 
-  // Upload a single image to Cloudinary
-  const uploadImageToCloudinary = async (file) => {
+  // Upload image to Cloudinary
+  const uploadToCloudinary = async (file) => {
+    setDebugInfo("Preparing to upload image to Cloudinary...");
+    
     // Create form data for upload
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'blog_uploads'); // You'll need to create this upload preset in your Cloudinary dashboard
     
     try {
+      setDebugInfo("Uploading to Cloudinary...");
+      setImageUploadProgress(30);
+      
       // Make API request to Cloudinary
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/ddq9cwjkr/image/upload`, // Replace YOUR_CLOUD_NAME with your Cloudinary cloud name
@@ -94,51 +81,21 @@ const BlogPostUploader = () => {
         }
       );
       
+      setImageUploadProgress(60);
+      
       if (!response.ok) {
         throw new Error(`Cloudinary upload failed with status: ${response.status}`);
       }
       
       const data = await response.json();
+      setImageUploadProgress(100);
+      setDebugInfo(`Image uploaded to Cloudinary successfully! URL: ${data.secure_url.substring(0, 20)}...`);
+      
       return data.secure_url; // Return the secure URL for the uploaded image
     } catch (error) {
       console.error("Cloudinary upload error:", error);
+      setDebugInfo(`Cloudinary upload error: ${error.message}`);
       throw error;
-    }
-  };
-
-  // Upload all images to Cloudinary
-  const uploadToCloudinary = async (files) => {
-    setDebugInfo("Preparing to upload images to Cloudinary...");
-    
-    if (files.length === 0) return [];
-    
-    const imageUrls = [];
-    setCurrentUploadIndex(0);
-    
-    try {
-      for (let i = 0; i < files.length; i++) {
-        setCurrentUploadIndex(i);
-        setDebugInfo(`Uploading image ${i+1} of ${files.length}...`);
-        
-        // Calculate progress based on completed uploads and current upload progress
-        // Each file is worth (100 / total files) percent of the total progress
-        const baseProgress = (i / files.length) * 100;
-        setImageUploadProgress(baseProgress);
-        
-        const url = await uploadImageToCloudinary(files[i]);
-        imageUrls.push(url);
-        
-        // Update progress after successful upload
-        setImageUploadProgress(((i + 1) / files.length) * 100);
-      }
-      
-      setDebugInfo(`All images uploaded successfully! Count: ${imageUrls.length}`);
-      return imageUrls;
-    } catch (error) {
-      console.error("Image upload error:", error);
-      setDebugInfo(`Image upload error: ${error.message}`);
-      // Return any successfully uploaded images
-      return imageUrls;
     }
   };
 
@@ -159,34 +116,34 @@ const BlogPostUploader = () => {
     setDebugInfo("Starting post submission...");
 
     try {
-      let imageUrls = [];
+      let imageUrl = null;
       
-      // First, upload images to Cloudinary if any are selected
-      if (imageFiles.length > 0) {
+      // First, upload the image to Cloudinary if one is selected
+      if (imageFile) {
         try {
-          imageUrls = await uploadToCloudinary(imageFiles);
-          setDebugInfo(`Image uploads successful: ${imageUrls.length} images uploaded`);
+          imageUrl = await uploadToCloudinary(imageFile);
+          setDebugInfo(`Image upload successful: ${imageUrl.substring(0, 20)}...`);
         } catch (imageError) {
-          console.error("Error with image uploads:", imageError);
-          setDebugInfo(`Some image uploads failed: ${imageError.message}`);
+          console.error("Error with image upload:", imageError);
+          setDebugInfo(`Image upload failed: ${imageError.message}`);
           
           setNotification({
             type: 'warning',
-            message: 'Some image uploads failed. Proceeding with successful uploads.'
+            message: 'Image upload failed. Proceeding without image.'
           });
           setTimeout(() => setNotification(null), 3000);
-          // Continue with any successfully uploaded images
+          // Continue without image
         }
       }
       
-      // Now create the post in Firestore with the image URLs
+      // Now create the post in Firestore with or without the image URL
       const db = getFirestore();
       setDebugInfo("Creating post in Firestore...");
       
       const docRef = await addDoc(collection(db, "blogPosts"), {
         content,
         readTime,
-        imageUrls, // Array of Cloudinary URLs
+        imageUrl, // This will be either the Cloudinary URL or null
         timestamp: serverTimestamp(),
         likes: 0,
         likedBy: []
@@ -201,10 +158,9 @@ const BlogPostUploader = () => {
       // Reset form
       setContent('');
       setReadTime('5 min read');
-      setImageFiles([]);
-      setImagePreviews([]);
+      setImageFile(null);
+      setImagePreview(null);
       setImageUploadProgress(0);
-      setCurrentUploadIndex(0);
       
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -236,12 +192,12 @@ const BlogPostUploader = () => {
     setIsSubmitting(true);
     
     try {
-      // Create post without images
+      // Create post without image
       const db = getFirestore();
       await addDoc(collection(db, "blogPosts"), {
         content,
         readTime,
-        imageUrls: [], // Empty array for no images
+        imageUrl: null,
         timestamp: serverTimestamp(),
         likes: 0,
         likedBy: []
@@ -249,15 +205,14 @@ const BlogPostUploader = () => {
       
       setNotification({
         type: 'success',
-        message: 'Post published without images!'
+        message: 'Post published without image!'
       });
       
       // Reset form
       setContent('');
       setReadTime('5 min read');
-      setImageFiles([]);
-      setImagePreviews([]);
-      setCurrentUploadIndex(0);
+      setImageFile(null);
+      setImagePreview(null);
       
       setTimeout(() => setNotification(null), 3000);
     } catch (error) {
@@ -367,63 +322,47 @@ const BlogPostUploader = () => {
               </p>
             </div>
             
-            {/* Multiple image upload section */}
+            {/* Image upload section */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-white">Images (optional)</label>
-                {imageFiles.length > 0 && (
-                  <button 
-                    type="button"
-                    onClick={removeAllImages}
-                    className="text-white/60 hover:text-red-400 text-xs transition-colors"
-                  >
-                    Remove all
-                  </button>
-                )}
+              <label className="block text-white mb-2">Image (optional)</label>
+              <div className="flex items-center">
+                <div className="flex-grow">
+                  {imageFile ? (
+                    <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-3">
+                      <div className="w-12 h-12 bg-indigo-500/20 rounded overflow-hidden mr-3">
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-grow">
+                        <p className="text-white text-sm truncate">{imageFile.name}</p>
+                        <p className="text-white/60 text-xs">
+                          {(imageFile.size / 1024).toFixed(1)} KB
+                        </p>
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={removeImage}
+                        className="text-white/60 hover:text-red-400 transition-colors"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="flex items-center justify-center w-full bg-white/5 border border-dashed border-white/20 rounded-xl p-4 cursor-pointer hover:border-indigo-500/40 transition-colors">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleImageChange} 
+                        className="hidden" 
+                      />
+                      <ImageIcon size={22} className="text-indigo-400 mr-3" />
+                      <span className="text-white/80">Click to upload an image</span>
+                    </label>
+                  )}
+                </div>
               </div>
               
-              {/* Image preview grid */}
-              {imagePreviews.length > 0 && (
-                <div className="mb-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    {imagePreviews.map((preview, index) => (
-                      <div key={index} className="relative group">
-                        <div className="w-full aspect-square bg-indigo-500/20 rounded overflow-hidden">
-                          <img src={preview} alt={`Preview ${index + 1}`} className="w-full h-full object-cover" />
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute top-1 right-1 bg-black/60 rounded-full p-1 text-white/80 hover:text-red-400 transition-colors"
-                        >
-                          <X size={16} />
-                        </button>
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white/80 text-xs p-1 truncate">
-                          {imageFiles[index].name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Upload button */}
-              <label className="flex items-center justify-center w-full bg-white/5 border border-dashed border-white/20 rounded-xl p-4 cursor-pointer hover:border-indigo-500/40 transition-colors">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleImageChange} 
-                  className="hidden"
-                  multiple
-                />
-                <Plus size={20} className="text-indigo-400 mr-2" />
-                <span className="text-white/80">
-                  {imageFiles.length > 0 ? 'Add more images' : 'Upload images'}
-                </span>
-              </label>
-              
               {/* Upload progress indicator */}
-              {imageUploadProgress > 0 && imageUploadProgress < 100 && isSubmitting && (
+              {imageUploadProgress > 0 && imageUploadProgress < 100 && (
                 <div className="mt-2">
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div 
@@ -431,18 +370,8 @@ const BlogPostUploader = () => {
                       style={{ width: `${imageUploadProgress}%` }}
                     ></div>
                   </div>
-                  <p className="text-white/60 text-xs mt-1">
-                    Uploading image {currentUploadIndex + 1} of {imageFiles.length} ({Math.round(imageUploadProgress)}%)
-                  </p>
+                  <p className="text-white/60 text-xs mt-1">Uploading: {imageUploadProgress}%</p>
                 </div>
-              )}
-              
-              {/* Image count indicator */}
-              {imageFiles.length > 0 && (
-                <p className="text-white/60 text-xs mt-2">
-                  {imageFiles.length} {imageFiles.length === 1 ? 'image' : 'images'} selected 
-                  ({(imageFiles.reduce((acc, file) => acc + file.size, 0) / 1024 / 1024).toFixed(2)} MB total)
-                </p>
               )}
             </div>
             
@@ -481,17 +410,17 @@ const BlogPostUploader = () => {
                 )}
               </button>
               
-              <button
-                type="button"
-                onClick={handleSubmitWithoutImage}
-                disabled={isSubmitting}
-                className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-gray-800/50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {isSubmitting ? (
-                  <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
-                ) : (
-                  "Skip Images"
-                )}
+             <button
+              type="button"
+              onClick={handleSubmitWithoutImage}
+              disabled={isSubmitting}
+              className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-gray-800/50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
+              ) : (
+                "Skip Image"
+              )}
               </button>
             </div>
           </form>
@@ -502,23 +431,9 @@ const BlogPostUploader = () => {
           <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/10">
             <h3 className="text-lg font-medium text-white mb-2">Preview</h3>
             <div className="mt-4">
-              {imagePreviews.length > 0 && (
-                <div className="mb-4 space-y-3">
-                  {/* Preview only the first image in the main preview */}
-                  <div className="rounded-xl overflow-hidden">
-                    <img src={imagePreviews[0]} alt="Main post image" className="w-full h-auto" />
-                  </div>
-                  
-                  {/* If there are more images, show thumbnails */}
-                  {imagePreviews.length > 1 && (
-                    <div className="flex space-x-2 overflow-x-auto pb-2">
-                      {imagePreviews.slice(1).map((preview, index) => (
-                        <div key={index} className="w-16 h-16 flex-shrink-0 rounded overflow-hidden">
-                          <img src={preview} alt={`Additional image ${index + 1}`} className="w-full h-full object-cover" />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+              {imagePreview && (
+                <div className="mb-4 rounded-xl overflow-hidden">
+                  <img src={imagePreview} alt="Post image" className="w-full h-auto" />
                 </div>
               )}
               <div className="prose prose-lg prose-invert max-w-none text-white/90">
