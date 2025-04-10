@@ -103,7 +103,7 @@ const currentYear = new Date().getFullYear();
   <div className='flex flex-col gap-0.1 lg:text-left reveal'>
     <p className='opacity-70 md:text-xs text-[10px]' style={{fontWeight: '300'}}> Hello I'm</p>
     <p className='font-semibold md:text-2xl text-sm text-indigo-400'>Emmanuel Ayeni.</p>
-    <p className='md:text-sm text-[10px] opacity-70 max-w-xs' style={{fontWeight: '300'}}>A Creative Brand Designer, Web Developer, Founder & Mentor. <span className='hidden lg:block'> I'm known for using my Creativity to design brands and Develop aesthetically pleasing UIs and build scalable web applications that perform efficiently and solve problems.</span></p>
+    <p className='md:text-sm text-[10px] opacity-70 max-w-xs' style={{fontWeight: '300'}}>A Creative Brand & Identity Designer, Web Developer, Mentor & Founder of ELIAS<span className='hidden lg:block'> I'm known for using my Creativity to design brands and Develop aesthetically pleasing UIs and build scalable web applications that perform efficiently and solve problems.</span></p>
   </div>
 </div>
         

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import model from '../assets/images/model.webp'
+import model from '../assets/images/image.png'
 import bluecheck from '../assets/images/bluecheck.png'
 import { Heart, ThumbsDown, User, Home, Calendar, ArrowLeft, Share2, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -410,7 +410,7 @@ const Blog = () => {
         blogPosts.map((post) => (
           <div 
             key={post.id} 
-            className="bg-black/80 border border-white/7 rounded-3xl overflow-hidden transition-all duration-300 hover:border-indigo-500/50"
+            className="bg-black/80 border border-white/7 rounded-3xl overflow-hidden transition-all duration-300 shadow-md shadow-indigo-600"
           >
             {/* Post header with author info */}
             <div className="flex items-center px-4 py-3 border-b border-white/7">
@@ -419,7 +419,7 @@ const Blog = () => {
                 <img src={model} alt="Emmy" className='rounded-full'/>
               </div>
               <div className="ml-3 flex items-center">
-                <div className="text-white font-medium flex flex-col text-[12px]">Emmanuel Ayeni <span className='opacity-70 font-light text-xs'>@emmy</span></div>
+                <div className="text-white font-medium flex flex-col text-[12px]">Emmanuel Ayeni <span className='opacity-70 font-normal text-xs'>@nuel_ayeni</span></div>
                 <div className="text-indigo-400 ml-1 mt-[-1.2rem]">
                   {/* <CheckCircle size={14} /> */}
                   <img src={bluecheck} alt="checkcircle" className='rounded-full size-4'/>
