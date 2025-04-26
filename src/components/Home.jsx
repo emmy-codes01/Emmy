@@ -103,7 +103,7 @@ const currentYear = new Date().getFullYear();
   <div className='flex flex-col gap-0.1 lg:text-left reveal'>
     <p className='opacity-70 md:text-xs text-[10px]' style={{fontWeight: '300'}}> Hello I'm</p>
     <p className='font-semibold md:text-2xl text-sm text-indigo-400'>Emmanuel Ayeni.</p>
-    <p className='md:text-sm text-[10px] opacity-70 max-w-xs' style={{fontWeight: '300'}}>A Creative Brand & Identity Designer, Web Developer, Mentor & Founder of ELIAS<span className='hidden lg:block'> I'm known for using my Creativity to design brands and Develop aesthetically pleasing UIs and build scalable web applications that perform efficiently and solve problems.</span></p>
+    <p className='md:text-sm text-[10px] opacity-70 max-w-xs' style={{fontWeight: '300'}}>A Creative Brand & Identity Designer, Web Developer, Entrepreneur, Mentor & Founder of ELIAS (A Leading Digital Services Agency)<span className='hidden lg:block'> I'm known for using my Creativity to design brands and Develop aesthetically pleasing UIs and build scalable web applications that perform efficiently and solve problems.</span></p>
   </div>
 </div>
         
@@ -121,6 +121,10 @@ const currentYear = new Date().getFullYear();
               </a>
             </div>
             
+              
+              
+
+              
             {/* Bottom Sheet Content */}
             {isAboutMeOpen && (
               <div 
@@ -214,15 +218,15 @@ const currentYear = new Date().getFullYear();
         {/* first */}
         <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal flex lg:flex-row flex-col md:grid md:grid-cols-3 items-stretch gap-4 justify-between bg-white/3 border-3xl py-14.5 px-5 rounded-3xl w-full h-full border border-zinc-900'>
   <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full h-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>03+</p>
+    <p className='text-3xl md:text-2xl font-semibold'>04+</p>
     <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Years <br /> Experience</p>
   </div>
   <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>20+</p>
+    <p className='text-3xl md:text-2xl font-semibold'>60+</p>
     <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Clients worked with</p>
   </div>
   <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>50+</p>
+    <p className='text-3xl md:text-2xl font-semibold'>120+</p>
     <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Projects completed</p>
   </div>
 </div>
