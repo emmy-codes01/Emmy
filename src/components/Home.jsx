@@ -226,7 +226,7 @@ const currentYear = new Date().getFullYear();
     <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Clients worked with</p>
   </div>
   <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>120+</p>
+    <p className='text-3xl md:text-2xl font-semibold'>125+</p>
     <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Projects completed</p>
   </div>
 </div>

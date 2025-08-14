@@ -27,6 +27,12 @@ import sm3 from '../assets/images/designs/sm3.webp'
 import sm4 from '../assets/images/designs/sm4.webp'
 import sm5 from '../assets/images/designs/sm5.webp'
 import sm6 from '../assets/images/designs/sm6.webp'
+import JHAY1 from '../assets/images/designs/JHAY1.webp'
+import JHAY2 from '../assets/images/designs/JHAY2.webp'
+import OC from '../assets/images/designs/OC.webp'
+import SC from '../assets/images/designs/SC.webp'
+import JZ1 from '../assets/images/designs/JZ1.webp'
+import WEDD from '../assets/images/designs/WEDD.webp'
 
 
 const Graphics = () => {
@@ -86,8 +92,9 @@ const Graphics = () => {
   return (
       <div className='reveal flex flex-col text-white items-stretch gap-4 px-5 lg:px-85 py-5 lg:py-15'>
       {/* Heading */}
-      <div>
-        <h4 className='md:gap-14 lg:gap-52 bg-white/3 border border-zinc-900 border-3xl p-5 rounded-3xl text-2xl font-semibold shadow-md shadow-indigo-500'>Graphic <span className='text-indigo-500'>Designs</span></h4>
+        <div className='flex flex-col bg-white/3 border border-zinc-900 rounded-3xl border-3xl p-5 shadow-md shadow-indigo-500'>
+        <h4 className=' text-lg font-semibold '> GRAPHIC <span className='text-indigo-500'>DESIGNS</span></h4>
+        <p className='font-light opacity-70 text-[10px]'>Selected Designs of Great Brands I've Partnered with</p>
       </div>
       
       
@@ -98,6 +105,127 @@ const Graphics = () => {
 
       {/* Cards wrapper */}
       
+
+
+
+
+{/* ROW 000000 */}
+          <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
+            {/* one - JHAYS DIGITALS */}
+            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-11 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={JHAY1} alt="dfexchange" className='rounded-2xl size-45 bg-cover w-full h-full blur-xs' loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-center items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>JHAY'S DIGITALS</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/oasis" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                  <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+            </div>
+
+            {/* two - JHAYS DIGITALS */}
+            <div className='reveal2 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={JHAY2} alt="funmite" className='blur-xs bg-cover w-full h-full rounded-2xl' loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-end items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>JHAY'S DIGITALS</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/crestora" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+        </div>
+        
+ {/* three - ophicial crypt */}
+            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={OC} alt="jozeal" className='blur-xs bg-cover rounded-2xl w-full h-full'   loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-end items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>X SPACE (OPHICIAL CRYPT)</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/upwave-university" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+        </div>
+
+      </div>
+
+
+
+
+
+
+{/* ROW 0000001111111 */}
+          <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
+            {/* one - OASIS */}
+            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-11 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={JZ1} alt="dfexchange" className='rounded-2xl size-45 bg-cover w-full h-full blur-xs' loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-center items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>JOZEAL TECHNOLOGIES</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/oasis" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                  <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+            </div>
+
+            {/* two - CRESTORA */}
+            <div className='reveal2 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={SC} alt="funmite" className='blur-xs bg-cover w-full h-full rounded-2xl' loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-end items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>SIGNAL COUNCIL</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/crestora" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+        </div>
+        
+ {/* three - UPWAVE UNI */}
+            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
+              <img src={WEDD} alt="jozeal" className='blur-xs bg-cover rounded-2xl w-full h-full'   loading="eager" // Ensure logo is eagerly loaded
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+
+              <div className='flex justify-end items-center w-full'>
+                <div className='flex flex-col mr-auto'>
+                  <p className='text-[8px] opacity-70'>ASSET</p>
+                  <p className='font-semibold'>WORLD ENTREPRENEURS DAY 2025</p>
+                </div>
+                {/* <Link to="/projects/logos&brand-designs/upwave-university" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
+                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
+                </Link> */}
+              </div>
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+
+
 
       {/* ROW 1 */}
           <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
