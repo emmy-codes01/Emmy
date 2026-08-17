@@ -8,7 +8,7 @@ import works from '../assets/images/works.png'
 import grid from '../assets/images/upwave.png'
 import {
   ArrowRight, ArrowUpRight, ChevronDown, Mail, BadgeCheck, Users,
-  Instagram, Linkedin, MessageCircle,
+  Instagram, Linkedin,  MessageCircle,
 } from 'lucide-react'
 
 /* ---------------------------------------------------------
@@ -43,6 +43,7 @@ const SOCIALS = [
   { href: 'https://instagram.com/eonvx_', label: 'Instagram', Icon: Instagram },
   { href: 'https://wa.me/+2349049173033', label: 'WhatsApp', Icon: MessageCircle },
   { href: 'https://linkedin.com/in/emmanuel-ayeni01', label: 'LinkedIn', Icon: Linkedin },
+
 ]
 
 const SERVICES = [

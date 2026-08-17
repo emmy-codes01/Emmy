@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ScrollReveal from 'scrollreveal';
-import ButtonGroup from '../components/ButtonGroup';
+// import ButtonGroup from '../components/ButtonGroup';
 import { ArrowLeft, Instagram, Linkedin, MessageCircle, Mail } from 'lucide-react'
 import grid from '../assets/images/OASIS.png'
 import oasislogo from '../assets/images/oasis/oasislogo.png'
@@ -89,7 +89,7 @@ const Oasis = () => {
 
         {/* ============= HEADER ============= */}
         <header className="reveal pt-14 lg:pt-20 pb-10">
-          <Link to="/projects" className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-[#E8A853] transition-colors duration-300 mb-9">
+          <Link to="/projects/logos&brand-designs" className="inline-flex items-center gap-1.5 text-xs text-white/40 hover:text-[#E8A853] transition-colors duration-300 mb-9">
             <ArrowLeft size={13} /> Back to portfolio
           </Link>
 
@@ -172,7 +172,7 @@ const Oasis = () => {
         </footer>
       </div>
 
-      <ButtonGroup />
+      {/* <ButtonGroup /> */}
     </div>
   )
 }

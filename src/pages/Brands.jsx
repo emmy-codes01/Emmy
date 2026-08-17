@@ -46,13 +46,13 @@ const BRAND_CARDS = [
     title: 'RCR RACING',
     to: '/projects/logos&brand-designs/RCR-RACING',
   },
-  {
-    index: '05',
-    img: SMITHXM,
-    tag: 'Cryptocurrency · Trading',
-    title: 'SMITH XM GLOBAL',
-    to: '/projects/logos&brand-designs/smith-xm-global',
-  },
+  // {
+  //   index: '05',
+  //   img: SMITHXM,
+  //   tag: 'Cryptocurrency · Trading',
+  //   title: 'SMITH XM GLOBAL',
+  //   to: '/projects/logos&brand-designs/smith-xm-global',
+  // },
   {
     index: '06',
     img: KONNEX,

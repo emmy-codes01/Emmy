@@ -1,454 +1,714 @@
-import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
-import { Upload, Check, AlertCircle, ArrowLeft, Image as ImageIcon, X } from 'lucide-react';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useState, useEffect } from 'react';
+import ScrollReveal from 'scrollreveal';
+import model from '../assets/images/image.png'
+import { Heart, ThumbsDown, Calendar, ArrowLeft, Share2, Home, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+  updateDoc,
+  doc,
+  increment,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+  where
+} from 'firebase/firestore';
 
-const BlogPostUploader = () => {
-  // State for form inputs
-  const [content, setContent] = useState('');
-  const [readTime, setReadTime] = useState('5 min read');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [notification, setNotification] = useState(null);
-  
-  // State for image handling
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageUploadProgress, setImageUploadProgress] = useState(0);
-  // Debug state
-  const [debugInfo, setDebugInfo] = useState(null);
+// Firebase configuration - using your existing config
+const firebaseConfig = {
+  apiKey: "AIzaSyAxzSXt3KkWBT7mAhq-EeVDRNz9Gmh39xg",
+  authDomain: "emmy-codes.firebaseapp.com",
+  projectId: "emmy-codes",
+  storageBucket: "emmy-codes.firebasestorage.app",
+  messagingSenderId: "266870836039",
+  appId: "1:266870836039:web:c5b8919bf492cc4f471a62",
+  measurementId: "G-X2D2RQ06F9"
+};
 
-  // Handle image selection
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    // Check file type
-    if (!file.type.match('image.*')) {
-      setNotification({
-        type: 'error',
-        message: 'Please select an image file.'
-      });
-      setTimeout(() => setNotification(null), 3000);
-      return;
-    }
+/* Same system as Home.jsx / Projectsgoal.jsx / Brands.jsx */
+const display = { fontFamily: "'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" }
+const ACCENT = '#E8A853'
+const eyebrow = 'text-[10px] tracking-[0.16em] uppercase text-white/35 font-medium'
+const body = 'text-sm text-white/50 font-light leading-relaxed'
 
-    // Check file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setNotification({
-        type: 'error',
-        message: 'Image must be smaller than 5MB.'
-      });
-      setTimeout(() => setNotification(null), 3000);
-      return;
-    }
+/* ============================================================
+   Everything below is defined at MODULE scope, not inside Blog.
+   That's the fix: previously PostActions / BlogPostsList /
+   BlogPostDetail (and these helper functions) were declared
+   inside the Blog component body, so every re-render — which
+   Firestore's onSnapshot fires constantly — created brand new
+   function references. React treats a new function reference as
+   a new component type and remounts the whole subtree instead of
+   just re-rendering with new props, which is what caused the
+   "glitching" (full unmount/remount + replayed entrance
+   animations) on every snapshot tick. Stable, module-level
+   references fix that: React now just re-renders with new props.
+   ============================================================ */
 
-    setImageFile(file);
-    
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImagePreview(e.target.result);
-    };
-    reader.readAsDataURL(file);
-  };
+// Real verified badge — amber gradient fill, white check, instead of the generic bluecheck.png
+const VerifiedBadge = ({ size = 14, gradientId = 'verified-badge' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-label="Verified">
+    <defs>
+      <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#E8A853" />
+        <stop offset="100%" stopColor="#f2d6a3" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M12 2l2.34 1.51 2.78-.46 1.14 2.58 2.58 1.14-.46 2.78L22 12l-1.62 2.45.46 2.78-2.58 1.14-1.14 2.58-2.78-.46L12 22l-2.34-1.51-2.78.46-1.14-2.58-2.58-1.14.46-2.78L2 12l1.62-2.45-.46-2.78 2.58-1.14 1.14-2.58 2.78.46L12 2z"
+      fill={`url(#${gradientId})`}
+    />
+    <path
+      d="M8.3 12.4l2.3 2.3 4.6-5.1"
+      stroke="#0a0a0b"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </svg>
+)
 
-  // Remove selected image
-  const removeImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    setImageUploadProgress(0);
-  };
+const formatDate = (timestamp) => {
+  if (!timestamp) return 'Just now';
 
-  // Upload image to Cloudinary
-  const uploadToCloudinary = async (file) => {
-    setDebugInfo("Preparing to upload image to Cloudinary...");
-    
-    // Create form data for upload
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'blog_uploads'); // You'll need to create this upload preset in your Cloudinary dashboard
-    
-    try {
-      setDebugInfo("Uploading to Cloudinary...");
-      setImageUploadProgress(30);
-      
-      // Make API request to Cloudinary
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/ddq9cwjkr/image/upload`, // Replace YOUR_CLOUD_NAME with your Cloudinary cloud name
-        {
-          method: 'POST',
-          body: formData
-        }
-      );
-      
-      setImageUploadProgress(60);
-      
-      if (!response.ok) {
-        throw new Error(`Cloudinary upload failed with status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setImageUploadProgress(100);
-      setDebugInfo(`Image uploaded to Cloudinary successfully! URL: ${data.secure_url.substring(0, 20)}...`);
-      
-      return data.secure_url; // Return the secure URL for the uploaded image
-    } catch (error) {
-      console.error("Cloudinary upload error:", error);
-      setDebugInfo(`Cloudinary upload error: ${error.message}`);
-      throw error;
-    }
-  };
+  const date = new Date(timestamp);
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }).format(date);
+};
 
-  // Function to handle post submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const truncateText = (text, maxLength = 140) => {
+  if (!text || text.length <= maxLength) return text;
+  return text.substr(0, maxLength) + '...';
+};
 
-    if (!content.trim()) {
-      setNotification({
-        type: 'error',
-        message: 'Content is required.'
-      });
-      setTimeout(() => setNotification(null), 3000);
-      return;
-    }
+const stripFormatting = (text) => {
+  if (!text) return '';
+  return text.replace(/\*\*/g, '').replace(/\*/g, '').replace(/\n/g, ' ');
+};
 
-    setIsSubmitting(true);
-    setDebugInfo("Starting post submission...");
+const renderContent = (content) => {
+  if (!content) return '';
 
-    try {
-      let imageUrl = null;
-      
-      // First, upload the image to Cloudinary if one is selected
-      if (imageFile) {
-        try {
-          imageUrl = await uploadToCloudinary(imageFile);
-          setDebugInfo(`Image upload successful: ${imageUrl.substring(0, 20)}...`);
-        } catch (imageError) {
-          console.error("Error with image upload:", imageError);
-          setDebugInfo(`Image upload failed: ${imageError.message}`);
-          
-          setNotification({
-            type: 'warning',
-            message: 'Image upload failed. Proceeding without image.'
-          });
-          setTimeout(() => setNotification(null), 3000);
-          // Continue without image
-        }
-      }
-      
-      // Now create the post in Firestore with or without the image URL
-      const db = getFirestore();
-      setDebugInfo("Creating post in Firestore...");
-      
-      const docRef = await addDoc(collection(db, "blogPosts"), {
-        content,
-        readTime,
-        imageUrl, // This will be either the Cloudinary URL or null
-        timestamp: serverTimestamp(),
-        likes: 0,
-        likedBy: []
-      });
-      
-      setDebugInfo(`Post created successfully with ID: ${docRef.id}`);
-      setNotification({
-        type: 'success',
-        message: 'Post published successfully!'
-      });
+  let formatted = content.replace(
+    /(https?:\/\/[^\s]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-[#E8A853] hover:underline">$1</a>'
+  );
 
-      // Reset form
-      setContent('');
-      setReadTime('5 min read');
-      setImageFile(null);
-      setImagePreview(null);
-      setImageUploadProgress(0);
-      
-      setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      console.error("Error publishing post:", error);
-      setDebugInfo(`Error: ${error.message}`);
-      setNotification({
-        type: 'error',
-        message: 'Failed to publish post: ' + error.message
-      });
-      setTimeout(() => setNotification(null), 5000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  formatted = formatted.replace(
+    /\*\*(.*?)\*\*/g,
+    '<strong>$1</strong>'
+  );
 
-  // Alternative submission method that bypasses image upload
-  const handleSubmitWithoutImage = async (e) => {
-    e.preventDefault();
-    
-    if (!content.trim()) {
-      setNotification({
-        type: 'error',
-        message: 'Content is required.'
-      });
-      setTimeout(() => setNotification(null), 3000);
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    try {
-      // Create post without image
-      const db = getFirestore();
-      await addDoc(collection(db, "blogPosts"), {
-        content,
-        readTime,
-        imageUrl: null,
-        timestamp: serverTimestamp(),
-        likes: 0,
-        likedBy: []
-      });
-      
-      setNotification({
-        type: 'success',
-        message: 'Post published without image!'
-      });
-      
-      // Reset form
-      setContent('');
-      setReadTime('5 min read');
-      setImageFile(null);
-      setImagePreview(null);
-      
-      setTimeout(() => setNotification(null), 3000);
-    } catch (error) {
-      console.error("Error publishing post:", error);
-      setNotification({
-        type: 'error',
-        message: 'Failed to publish post: ' + error.message
-      });
-      setTimeout(() => setNotification(null), 3000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  formatted = formatted.replace(
+    /\*(.*?)\*/g,
+    '<em>$1</em>'
+  );
 
-  const renderNotification = () => {
-    if (!notification) return null;
+  formatted = formatted.replace(/\n/g, '<br>');
 
-    const { type, message } = notification;
-    const bgColor = type === 'success' ? 'bg-green-500/10' : type === 'warning' ? 'bg-yellow-500/10' : 'bg-red-500/10';
-    const borderColor = type === 'success' ? 'border-green-500/20' : type === 'warning' ? 'border-yellow-500/20' : 'border-red-500/20';
-    const textColor = type === 'success' ? 'text-green-400' : type === 'warning' ? 'text-yellow-400' : 'text-red-400';
-    const Icon = type === 'success' ? Check : AlertCircle;
+  return <div dangerouslySetInnerHTML={{ __html: formatted }} />;
+};
 
-    return (
-      <div className={`mb-6 flex items-center justify-center py-3 ${bgColor} border ${borderColor} rounded-xl transition-all`}>
-        <Icon size={18} className={`${textColor} mr-2`} />
-        <p className={textColor}>{message}</p>
-      </div>
-    );
-  };
-
-  // Render content with simple formatting
-  const renderContent = (content) => {
-    if (!content) return '';
-
-    // Replace URLs with clickable links
-    let formatted = content.replace(
-      /(https?:\/\/[^\s]+)/g, 
-      '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:underline">$1</a>'
-    );
-    
-    // Replace **bold** with <strong>
-    formatted = formatted.replace(
-      /\*\*(.*?)\*\*/g, 
-      '<strong>$1</strong>'
-    );
-    
-    // Replace *italic* with <em>
-    formatted = formatted.replace(
-      /\*(.*?)\*/g, 
-      '<em>$1</em>'
-    );
-    
-    // Replace newlines with <br>
-    formatted = formatted.replace(/\n/g, '<br>');
-    
-    return <div dangerouslySetInnerHTML={{ __html: formatted }} />;
-  };
+const renderFeaturedImage = (imageUrl, altText = "Blog post image") => {
+  if (!imageUrl) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-gradient-to-br from-gray-900 to-black border border-indigo-500/20 rounded-2xl p-6 mt-12 shadow-xl shadow-indigo-500/10">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8 relative">
-        <div className="flex items-center">
-          <div className="absolute -left-2 -top-2 w-10 h-10 bg-indigo-500 rounded-full blur-xl opacity-30"></div>
-          <Upload className="text-indigo-400 mr-3" size={22} />
-          <div>
-            <h1 className="text-2xl font-bold text-white tracking-tight">Create New Post</h1>
-            <p className="text-white/60 text-sm">Share your thoughts with the world</p>
-          </div>
-        </div>
-        
-        <Link
-         to="/blogs"
-          className="flex items-center text-white/60 hover:text-indigo-400 transition-colors"
-        >
-          <ArrowLeft size={20} className="mr-2" />
-          All posts
-        </Link>
+    <div className="rounded-2xl overflow-hidden border border-white/[0.06]">
+      <img
+        src={imageUrl}
+        alt={altText}
+        className="w-full h-auto"
+        loading="lazy"
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "https://placehold.co/800x400/1a1a1a/E8A853?text=Image+Unavailable";
+        }}
+      />
+    </div>
+  );
+};
+
+// Now takes its handlers as props instead of closing over Blog's state.
+const PostActions = ({ post, size = 15, onLike, onDislike, onShare }) => (
+  <div className="flex items-center gap-4">
+    <button
+      className={`flex items-center gap-1.5 transition-colors duration-300 ${
+        post.likedByCurrentUser ? 'text-[#E8A853]' : 'text-white/50 hover:text-[#E8A853]'
+      }`}
+      onClick={() => onLike(post.id)}
+      aria-label="Like"
+    >
+      <Heart size={size} className={post.likedByCurrentUser ? 'fill-[#E8A853]' : ''} />
+      <span className="text-xs">{post.likes || 0}</span>
+    </button>
+
+    <button
+      className={`flex items-center gap-1.5 transition-colors duration-300 ${
+        post.dislikedByCurrentUser ? 'text-red-400' : 'text-white/50 hover:text-red-400'
+      }`}
+      onClick={() => onDislike(post.id)}
+      aria-label="Dislike"
+    >
+      <ThumbsDown size={size} className={post.dislikedByCurrentUser ? 'fill-red-400' : ''} />
+      <span className="text-xs">{post.dislikes || 0}</span>
+    </button>
+
+    <button
+      className="flex items-center gap-1.5 text-white/50 hover:text-[#E8A853] transition-colors duration-300"
+      onClick={() => onShare(post.id)}
+      aria-label="Share"
+    >
+      <Share2 size={size} />
+    </button>
+  </div>
+);
+
+// ---- Post grid (Behance-style cards, matching Projects/Brands) ----
+const BlogPostsList = ({ isLoading, blogPosts, onSelectPost, onLike, onDislike, onShare }) => (
+  <>
+    {isLoading ? (
+      <div className="flex justify-center py-16">
+        <div className="size-8 rounded-full border-2 border-white/10 border-t-[#E8A853] animate-spin" />
       </div>
-
-      {renderNotification()}
-      
-      {/* Debug info */}
-      {debugInfo && (
-        <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
-          <h3 className="text-blue-400 font-medium mb-2">Debug Info:</h3>
-          <pre className="text-white/70 text-sm whitespace-pre-wrap">{debugInfo}</pre>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Form Section */}
-        <div>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="content" className="block text-white mb-2">Post Content</label>
-              <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 h-56"
-                placeholder="Write your post content..."
-              ></textarea>
-              <p className="text-white/60 text-xs mt-2">
-                Formatting: Use *text* for italic, **text** for bold, and URLs will be auto-linked
-              </p>
-            </div>
-            
-            {/* Image upload section */}
-            <div>
-              <label className="block text-white mb-2">Image (optional)</label>
-              <div className="flex items-center">
-                <div className="flex-grow">
-                  {imageFile ? (
-                    <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-3">
-                      <div className="w-12 h-12 bg-indigo-500/20 rounded overflow-hidden mr-3">
-                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-grow">
-                        <p className="text-white text-sm truncate">{imageFile.name}</p>
-                        <p className="text-white/60 text-xs">
-                          {(imageFile.size / 1024).toFixed(1)} KB
-                        </p>
-                      </div>
-                      <button 
-                        type="button" 
-                        onClick={removeImage}
-                        className="text-white/60 hover:text-red-400 transition-colors"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex items-center justify-center w-full bg-white/5 border border-dashed border-white/20 rounded-xl p-4 cursor-pointer hover:border-indigo-500/40 transition-colors">
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleImageChange} 
-                        className="hidden" 
-                      />
-                      <ImageIcon size={22} className="text-indigo-400 mr-3" />
-                      <span className="text-white/80">Click to upload an image</span>
-                    </label>
-                  )}
+    ) : blogPosts.length === 0 ? (
+      <div className="text-center py-14 bg-white/[0.03] rounded-3xl border border-white/[0.08]">
+        <p className="text-white/50 text-sm">No posts available yet.</p>
+      </div>
+    ) : (
+      <div className="grid gap-5 sm:grid-cols-2">
+        {blogPosts.map((post) => (
+          <div
+            key={post.id}
+            className="post-reveal group flex flex-col justify-between rounded-3xl border border-white/[0.08] bg-white/[0.03] overflow-hidden transition-all duration-500 hover:border-[#E8A853]/30"
+          >
+            <button onClick={() => onSelectPost(post)} className="text-left w-full">
+              {post.imageUrl ? (
+                <div className="relative overflow-hidden">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.title}
+                    className="w-full h-auto grayscale-[25%] group-hover:grayscale-0 transition-all duration-500"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "https://placehold.co/800x500/1a1a1a/E8A853?text=Insight";
+                    }}
+                  />
+                  <span
+                    className="absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/60"
+                    style={display}
+                  >
+                    {formatDate(post.timestamp)}
+                  </span>
                 </div>
-              </div>
-              
-              {/* Upload progress indicator */}
-              {imageUploadProgress > 0 && imageUploadProgress < 100 && (
-                <div className="mt-2">
-                  <div className="w-full bg-white/10 rounded-full h-2">
-                    <div 
-                      className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${imageUploadProgress}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-white/60 text-xs mt-1">Uploading: {imageUploadProgress}%</p>
-                </div>
-              )}
-            </div>
-            
-            <div>
-              <label htmlFor="readTime" className="block text-white mb-2">Read Time</label>
-              <select
-                id="readTime"
-                value={readTime}
-                onChange={(e) => setReadTime(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              >
-                <option value="1 min read">1 min read</option>
-                <option value="3 min read">3 min read</option>
-                <option value="5 min read">5 min read</option>
-                <option value="10 min read">10 min read</option>
-                <option value="15+ min read">15+ min read</option>
-              </select>
-            </div>
-            
-            <div className="flex gap-4">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-indigo-800/50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin mr-2"></div>
-                    Publishing...
-                  </>
-                ) : (
-                  <>
-                    <Upload size={18} className="mr-2" />
-                    Publish Post
-                  </>
-                )}
-              </button>
-              
-             <button
-              type="button"
-              onClick={handleSubmitWithoutImage}
-              disabled={isSubmitting}
-              className="flex-none bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-xl transition-colors disabled:bg-gray-800/50 disabled:cursor-not-allowed flex items-center justify-center"
-            >
-              {isSubmitting ? (
-                <div className="w-5 h-5 border-t-2 border-b-2 border-white rounded-full animate-spin"></div>
               ) : (
-                "Skip Image"
-              )}
-              </button>
-            </div>
-          </form>
-        </div>
-        
-        {/* Preview Section */}
-        <div className="lg:block">
-          <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-6 border border-white/10">
-            <h3 className="text-lg font-medium text-white mb-2">Preview</h3>
-            <div className="mt-4">
-              {imagePreview && (
-                <div className="mb-4 rounded-xl overflow-hidden">
-                  <img src={imagePreview} alt="Post image" className="w-full h-auto" />
+                <div className="px-5 pt-5">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full border border-white/[0.1] text-white/40" style={display}>
+                    {formatDate(post.timestamp)}
+                  </span>
                 </div>
               )}
-              <div className="prose prose-lg prose-invert max-w-none text-white/90">
-                {content ? (
-                  renderContent(content)
-                ) : (
-                  <p className="text-white/50 italic">Post content will appear here...</p>
-                )}
+
+              <div className="px-5 pt-4">
+                <h3 className="text-[1.05rem] leading-snug text-white line-clamp-2" style={display}>{post.title}</h3>
+                <p className={`${body} mt-1.5 line-clamp-2`}>{stripFormatting(truncateText(post.content, 140))}</p>
               </div>
+            </button>
+
+            <div className="flex items-center justify-between px-5 py-4 mt-3">
+              <PostActions post={post} onLike={onLike} onDislike={onDislike} onShare={onShare} />
+              <button
+                onClick={() => onSelectPost(post)}
+                className="shrink-0 flex items-center gap-1 text-xs text-white/60 border border-white/[0.1] group-hover:text-[#E8A853] group-hover:border-[#E8A853]/40 px-3 py-2 rounded-full transition-colors duration-300"
+              >
+                Expand <ArrowUpRight size={12} />
+              </button>
             </div>
           </div>
+        ))}
+      </div>
+    )}
+  </>
+);
+
+// ---- Full post reveal ----
+const BlogPostDetail = ({ selectedPost, onBack, onLike, onDislike, onShare }) => {
+  if (!selectedPost) return null;
+
+  return (
+    <div key={selectedPost.id} className="w-full animate-post-in">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-2 text-sm text-white/50 hover:text-[#E8A853] mb-5 transition-colors duration-300"
+      >
+        <ArrowLeft size={16} />
+        Back to feed
+      </button>
+
+      <div className="bg-white/[0.03] border border-white/[0.08] rounded-3xl overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.08]">
+          <img src={model} alt="Emmanuel Ayeni" className="size-10 rounded-full object-cover ring-1 ring-white/[0.1]" />
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm text-white/90" style={display}>Moyinoluwa E. Ayeni</span>
+              <VerifiedBadge size={14} gradientId="badge-detail" />
+            </div>
+            <span className="text-xs text-white/40">elias@monolithstudios</span>
+          </div>
+        </div>
+
+        {selectedPost.imageUrl && (
+          <div className="px-6 pt-5">
+            {renderFeaturedImage(selectedPost.imageUrl, selectedPost.title)}
+          </div>
+        )}
+
+        <div className="px-6 pt-5">
+          <h2 className="text-xl leading-snug text-white" style={display}>{selectedPost.title}</h2>
+        </div>
+
+        <div className="px-6 mt-4 text-white/60 text-[15px] leading-relaxed">
+          {renderContent(selectedPost.content)}
+        </div>
+
+        <div className="flex items-center gap-1.5 px-6 pt-5 pb-1 text-white/35 text-xs">
+          <Calendar size={13} />
+          {formatDate(selectedPost.timestamp)}
+        </div>
+
+        <div className="px-6 py-5 border-t border-white/[0.08] mt-3">
+          <PostActions post={selectedPost} size={18} onLike={onLike} onDislike={onDislike} onShare={onShare} />
         </div>
       </div>
     </div>
   );
 };
 
-export default BlogPostUploader;
+const Blog = () => {
+  useEffect(() => {
+    document.title = "Insights";
+    return () => {
+      document.title = "Moyinoluwa E. Ayeni";
+    };
+  }, []);
+
+  const currentYear = new Date().getFullYear();
+
+  // State for blog posts
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [copySuccess, setCopySuccess] = useState('');
+
+  // State for user ID
+  const [userId, setUserId] = useState('');
+
+  // Generate a unique user ID for the current session if not already set
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('blogUserId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      const newUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('blogUserId', newUserId);
+      setUserId(newUserId);
+    }
+  }, []);
+
+  // Fetch all blog posts
+  useEffect(() => {
+    const postsRef = collection(db, "blogPosts");
+    const postsQuery = query(postsRef, orderBy("timestamp", "desc"));
+
+    try {
+      const unsubscribe = onSnapshot(postsQuery, (snapshot) => {
+        const postsData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+          timestamp: doc.data().timestamp?.toDate() || new Date(),
+          likedByCurrentUser: doc.data().likedBy?.includes(userId) || false,
+          dislikedByCurrentUser: doc.data().dislikedBy?.includes(userId) || false
+        }));
+
+        setBlogPosts(postsData);
+        setIsLoading(false);
+      }, (error) => {
+        console.error("Error listening to posts:", error);
+        setError('Failed to load blog posts: ' + error.message);
+        setIsLoading(false);
+      });
+
+      return () => unsubscribe();
+    } catch (err) {
+      console.error("Error setting up blog posts listener:", err);
+      setError('Failed to connect to database');
+      setIsLoading(false);
+    }
+  }, [userId]);
+
+  // Reveal post cards as they scroll into view.
+  // Depends on blogPosts.length (not the array itself) so liking/disliking a post —
+  // which replaces the array reference without changing how many posts exist —
+  // doesn't re-trigger ScrollReveal and flicker every card on the page.
+  useEffect(() => {
+    if (!isLoading && !selectedPost) {
+      ScrollReveal().reveal('.post-reveal', {
+        distance: '20px',
+        duration: 700,
+        interval: 80,
+        easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+        opacity: 0,
+        reset: false,
+      });
+    }
+  }, [isLoading, blogPosts.length, selectedPost]);
+
+  const handleLikePost = async (postId) => {
+    try {
+      const postRef = doc(db, "blogPosts", postId);
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        setError('Post not found');
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+
+      const postData = postSnap.data();
+      const alreadyLiked = postData.likedBy?.includes(userId);
+      const alreadyDisliked = postData.dislikedBy?.includes(userId);
+
+      if (alreadyLiked) {
+        await updateDoc(postRef, {
+          likes: increment(-1),
+          likedBy: arrayRemove(userId)
+        });
+
+        setBlogPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? {...post, likes: Math.max(0, post.likes - 1), likedByCurrentUser: false}
+              : post
+          )
+        );
+
+        if (selectedPost && selectedPost.id === postId) {
+          setSelectedPost(prev => ({
+            ...prev,
+            likes: Math.max(0, prev.likes - 1),
+            likedByCurrentUser: false
+          }));
+        }
+        return;
+      }
+
+      if (alreadyDisliked) {
+        await updateDoc(postRef, {
+          likes: increment(1),
+          dislikes: increment(-1),
+          likedBy: arrayUnion(userId),
+          dislikedBy: arrayRemove(userId)
+        });
+
+        setBlogPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likes: post.likes + 1,
+                  dislikes: Math.max(0, post.dislikes - 1),
+                  likedByCurrentUser: true,
+                  dislikedByCurrentUser: false
+                }
+              : post
+          )
+        );
+
+        if (selectedPost && selectedPost.id === postId) {
+          setSelectedPost(prev => ({
+            ...prev,
+            likes: prev.likes + 1,
+            dislikes: Math.max(0, prev.dislikes - 1),
+            likedByCurrentUser: true,
+            dislikedByCurrentUser: false
+          }));
+        }
+        return;
+      }
+
+      await updateDoc(postRef, {
+        likes: increment(1),
+        likedBy: arrayUnion(userId)
+      });
+
+      setBlogPosts(prevPosts =>
+        prevPosts.map(post =>
+          post.id === postId
+            ? {...post, likes: post.likes + 1, likedByCurrentUser: true}
+            : post
+        )
+      );
+
+      if (selectedPost && selectedPost.id === postId) {
+        setSelectedPost(prev => ({
+          ...prev,
+          likes: prev.likes + 1,
+          likedByCurrentUser: true
+        }));
+      }
+    } catch (err) {
+      console.error("Error liking post:", err);
+      setError('Failed to like post');
+      setTimeout(() => setError(null), 3000);
+    }
+  };
+
+  const handleDislikePost = async (postId) => {
+    try {
+      const postRef = doc(db, "blogPosts", postId);
+      const postSnap = await getDoc(postRef);
+
+      if (!postSnap.exists()) {
+        setError('Post not found');
+        setTimeout(() => setError(null), 3000);
+        return;
+      }
+
+      const postData = postSnap.data();
+      const alreadyDisliked = postData.dislikedBy?.includes(userId);
+      const alreadyLiked = postData.likedBy?.includes(userId);
+
+      if (alreadyDisliked) {
+        await updateDoc(postRef, {
+          dislikes: increment(-1),
+          dislikedBy: arrayRemove(userId)
+        });
+
+        setBlogPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? {...post, dislikes: Math.max(0, post.dislikes - 1), dislikedByCurrentUser: false}
+              : post
+          )
+        );
+
+        if (selectedPost && selectedPost.id === postId) {
+          setSelectedPost(prev => ({
+            ...prev,
+            dislikes: Math.max(0, prev.dislikes - 1),
+            dislikedByCurrentUser: false
+          }));
+        }
+        return;
+      }
+
+      if (alreadyLiked) {
+        await updateDoc(postRef, {
+          likes: increment(-1),
+          dislikes: increment(1),
+          likedBy: arrayRemove(userId),
+          dislikedBy: arrayUnion(userId)
+        });
+
+        setBlogPosts(prevPosts =>
+          prevPosts.map(post =>
+            post.id === postId
+              ? {
+                  ...post,
+                  likes: Math.max(0, post.likes - 1),
+                  dislikes: post.dislikes + 1,
+                  likedByCurrentUser: false,
+                  dislikedByCurrentUser: true
+                }
+              : post
+          )
+        );
+
+        if (selectedPost && selectedPost.id === postId) {
+          setSelectedPost(prev => ({
+            ...prev,
+            likes: Math.max(0, prev.likes - 1),
+            dislikes: prev.dislikes + 1,
+            likedByCurrentUser: false,
+            dislikedByCurrentUser: true
+          }));
+        }
+        return;
+      }
+
+      await updateDoc(postRef, {
+        dislikes: increment(1),
+        dislikedBy: arrayUnion(userId)
+      });
+
+      setBlogPosts(prevPosts =>
+        prevPosts.map(post =>
+          post.id === postId
+            ? {...post, dislikes: (post.dislikes || 0) + 1, dislikedByCurrentUser: true}
+            : post
+        )
+      );
+
+      if (selectedPost && selectedPost.id === postId) {
+        setSelectedPost(prev => ({
+          ...prev,
+          dislikes: (prev.dislikes || 0) + 1,
+          dislikedByCurrentUser: true
+        }));
+      }
+    } catch (err) {
+      console.error("Error disliking post:", err);
+      setError('Failed to dislike post');
+      setTimeout(() => setError(null), 3000);
+    }
+  };
+
+  const handleSharePost = (postId) => {
+    const shareUrl = `${window.location.origin}/blog/${postId}`;
+
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => {
+        setCopySuccess('Link copied!');
+        setTimeout(() => setCopySuccess(''), 3000);
+      })
+      .catch(err => {
+        console.error('Failed to copy link: ', err);
+        setError('Failed to copy link');
+        setTimeout(() => setError(null), 3000);
+      });
+  };
+
+  return (
+    <div className="relative min-h-screen bg-[#0a0a0b] text-[#f2f0ec] overflow-hidden">
+      {/* same film-grain texture as the rest of the site */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
+      <div
+        className="pointer-events-none fixed -top-32 left-[10%] w-[36rem] h-[36rem] z-0 opacity-[0.13] blur-[110px]"
+        style={{ background: 'radial-gradient(circle, #E8A853, transparent 65%)' }}
+      />
+      <div
+        className="pointer-events-none fixed top-60 right-[6%] w-[28rem] h-[28rem] z-0 opacity-[0.1] blur-[110px]"
+        style={{ background: 'radial-gradient(circle, #7C6FF0, transparent 65%)' }}
+      />
+
+      <div className="relative z-10 max-w-[900px] mx-auto pt-8 pb-24 px-5 sm:px-8">
+
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-1.5 text-[11px] text-white/40 mb-6" style={display}>
+          <Link to="/" className="hover:text-[#E8A853] transition-colors duration-300">Home</Link>
+          <ChevronRight size={12} className="text-white/20" />
+          <span className="text-white/70">Blog</span>
+        </nav>
+
+        {/* Header */}
+        <div className="pb-8 mb-8 border-b border-white/[0.08]">
+          <p className={eyebrow}>Insights</p>
+          <h1 className="text-[1.8rem] md:text-[2.2rem] leading-tight mt-3" style={display}>
+            Insights, articles &amp; <span className="bg-gradient-to-r from-[#E8A853] to-[#f2d6a3] bg-clip-text text-transparent">everything else.</span>
+          </h1>
+          <div className="flex items-center gap-2.5 mt-5">
+            <img src={model} alt="Emmanuel Ayeni" className="size-8 rounded-full object-cover ring-1 ring-white/[0.1]" />
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm text-white/70" style={display}>Moyinoluwa E. Ayeni</span>
+              <VerifiedBadge size={14} gradientId="badge-header" />
+            </div>
+          </div>
+        </div>
+
+        {/* Main content */}
+        {error && (
+          <div className="mb-5 py-2.5 px-4 bg-red-500/10 border border-red-500/20 rounded-xl text-sm">
+            <p className="text-red-400">{error}</p>
+          </div>
+        )}
+
+        {selectedPost ? (
+          <BlogPostDetail
+            selectedPost={selectedPost}
+            onBack={() => setSelectedPost(null)}
+            onLike={handleLikePost}
+            onDislike={handleDislikePost}
+            onShare={handleSharePost}
+          />
+        ) : (
+          <BlogPostsList
+            isLoading={isLoading}
+            blogPosts={blogPosts}
+            onSelectPost={setSelectedPost}
+            onLike={handleLikePost}
+            onDislike={handleDislikePost}
+            onShare={handleSharePost}
+          />
+        )}
+
+        {/* Footer */}
+        <footer className="pt-8 mt-14 border-t border-white/[0.08] text-center">
+          <p className="text-xs text-white/30">
+            <span className="text-white/60" style={display}>Moyinoluwa E. Ayeni</span> © {currentYear} All rights reserved.
+          </p>
+        </footer>
+      </div>
+
+      {/* Floating home button */}
+      <Link
+        to="/"
+        aria-label="Back to home"
+        className="fixed bottom-22 right-6 z-20 flex items-center justify-center size-13 rounded-full bg-[#E8A853] hover:bg-[#f2d6a3] hover:scale-105 transition-all duration-300"
+        style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(232,168,83,0.15)' }}
+      >
+        <Home size={22} className="text-black" />
+      </Link>
+
+      {/* Copy success notification */}
+      {copySuccess && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-[#E8A853] text-black py-2 px-4 rounded-full text-sm font-medium shadow-lg z-30">
+          {copySuccess}
+        </div>
+      )}
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        @keyframes post-in {
+          from { opacity: 0; transform: translateY(14px) scale(0.99); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-post-in { animation: post-in 500ms cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-post-in { animation: none; }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default Blog;
