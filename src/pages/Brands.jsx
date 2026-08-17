@@ -1,11 +1,8 @@
 import React, { useEffect } from 'react'
 import ScrollReveal from 'scrollreveal';
-import ButtonGroup from '../components/ButtonGroup';
-import { ArrowRight, ArrowUp, ArrowDown, X, Eye, Mail } from 'lucide-react'
+// import ButtonGroup from '../components/ButtonGroup';
+import { Eye, Instagram, Linkedin, MessageCircle, Mail, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import ig from '../assets/images/Instagram.png'
-import li from '../assets/images/LinkedIn.png'
-import wa from '../assets/images/WhatsApp.png'
 import grid from '../assets/images/OASIS.png'
 import CRESTORA from '../assets/images/CRESTORA.png'
 import upwavelogo from '../assets/images/upwavelogo.png'
@@ -14,264 +11,231 @@ import SMITHXM from '../assets/images/SMITHXM.png'
 import KONNEX from '../assets/images/KONNEX.png'
 import KRONIK from '../assets/images/KRONIK.png'
 
+/* Same system as Home.jsx / Projectsgoal.jsx — same grotesque display type, same amber accent, same shell. */
+const display = { fontFamily: "'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" }
 
+const eyebrow = 'text-[10px] tracking-[0.16em] uppercase text-white/35 font-medium'
+const body = 'text-sm text-white/50 font-light leading-relaxed'
+
+const BRAND_CARDS = [
+  {
+    index: '01',
+    img: grid,
+    tag: 'Urban Streetwear Clothing',
+    title: 'OASIS NG',
+    to: '/projects/logos&brand-designs/oasis',
+  },
+  {
+    index: '02',
+    img: CRESTORA,
+    tag: 'Cosmetic & Skincare',
+    title: 'CRESTORA',
+    to: '/projects/logos&brand-designs/crestora',
+  },
+  {
+    index: '03',
+    img: upwavelogo,
+    tag: 'Education · Corporate',
+    title: 'UPWAVE UNIVERSITY',
+    to: '/projects/logos&brand-designs/upwave-university',
+  },
+  {
+    index: '04',
+    img: RCR,
+    tag: 'Sport · Racing · Rebranding',
+    title: 'RCR RACING',
+    to: '/projects/logos&brand-designs/RCR-RACING',
+  },
+  {
+    index: '05',
+    img: SMITHXM,
+    tag: 'Cryptocurrency · Trading',
+    title: 'SMITH XM GLOBAL',
+    to: '/projects/logos&brand-designs/smith-xm-global',
+  },
+  {
+    index: '06',
+    img: KONNEX,
+    tag: 'Technology · Corporate',
+    title: 'KONNEX',
+    to: '/projects/logos&brand-designs/konnex',
+  },
+  {
+    index: '07',
+    img: KRONIK,
+    tag: 'Building · Construction',
+    title: 'KRONIK',
+    to: '/projects/logos&brand-designs/kronik',
+  },
+]
+
+// Same handles as Home.jsx / Projectsgoal.jsx — kept identical across pages on purpose.
+const SOCIALS = [
+  { href: 'https://instagram.com/eonvx_', label: 'Instagram', Icon: Instagram },
+  { href: 'https://wa.me/+2349049173033', label: 'WhatsApp', Icon: MessageCircle },
+  { href: 'https://linkedin.com/in/emmanuel-ayeni01', label: 'LinkedIn', Icon: Linkedin },
+]
 
 const Brands = () => {
 
-    React.useEffect(() => {
-    // Set page title when component mounts
-    document.title = "Brands Designed by Emmy";
-    
-    // Optional: Reset title when component unmounts
+  useEffect(() => {
+    document.title = "Brands Designed by Moyinoluwa E. Ayeni";
     return () => {
-      document.title = "Emmanuel Ayeni";
+      document.title = "Moyinoluwa E. Ayeni";
     };
   }, []);
 
   const currentYear = new Date().getFullYear();
 
-    
-    // SCROLL REVEAL
-
- useEffect(() => {
-    // ScrollReveal setup
+  useEffect(() => {
     ScrollReveal().reveal('.reveal', {
-      distance: '50px',
-      duration: 1000,
-      delay: 200,
-      easing: 'ease-in-out',
+      distance: '24px',
+      duration: 900,
+      delay: 100,
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
       opacity: 0,
-      reset: false, // Optional: Reset animation on scroll back
-      scale: 0.8, // Optional: You can scale the element
-    });
-   
-   
- ScrollReveal().reveal(".reveal1", {
-      origin: "left",
-      distance: "800px",
-      duration: 1200,
-      delay: 200,
       reset: false,
     });
-    ScrollReveal().reveal(".reveal2", {
-      origin: "right",
-      distance: "800px",
-      duration: 1200,
-      delay: 200,
-      reset: false,
-    });
-   
-   
-   
   }, []);
-    
-
 
   return (
-     <div className='flex flex-col text-white items-stretch gap-4 px-5 lg:px-85 py-5 lg:py-15'>
-      {/* Heading */}
-       <div className='flex flex-col bg-white/3 border border-zinc-900 rounded-3xl border-3xl p-5 shadow-md shadow-indigo-500'>
-        <h4 className=' text-lg font-semibold '>LOGOS & BRAND <span className='text-indigo-500'>IDENTITIES</span></h4>
-        <p className='font-light opacity-70 text-[10px]'>Some lucky brands that were designed by me</p>
-      </div>
-    
-      
+    <div className="relative min-h-screen bg-[#0a0a0b] text-[#f2f0ec] overflow-hidden">
+      {/* same film-grain texture as Home / Projects */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
 
-  
-      {/* Cards wrapper */}
-      
-          <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
-            {/* one - OASIS */}
-            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-11 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={grid} alt="logo compilation" className='rounded-2xl size-45 bg-cover w-full h-full blur-xs' loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+      {/* same drifting ambient blobs */}
+      <div
+        className="pointer-events-none fixed -top-32 left-[12%] w-[38rem] h-[38rem] z-0 opacity-[0.16] blur-[110px] animate-drift-a"
+        style={{ background: 'radial-gradient(circle, #E8A853, transparent 65%)' }}
+      />
+      <div
+        className="pointer-events-none fixed top-40 right-[8%] w-[32rem] h-[32rem] z-0 opacity-[0.13] blur-[110px] animate-drift-b"
+        style={{ background: 'radial-gradient(circle, #7C6FF0, transparent 65%)' }}
+      />
 
-              <div className='flex justify-center items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>URBAN STREETWEAR CLOTHING</p>
-                  <p className='font-semibold'>OASIS NG</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/oasis" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                  <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-            </div>
+      <div className="relative z-10 max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-12 py-10 lg:py-16">
 
-            {/* two - CRESTORA */}
-            <div className='reveal2 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={CRESTORA} alt="CRESTORA" className='blur-xs bg-cover w-full h-full rounded-2xl' loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+        {/* ---- Breadcrumbs ---- */}
+        <nav className="reveal flex items-center gap-1.5 text-[11px] text-white/40 mb-8" style={display}>
+          <Link to="/" className="hover:text-[#E8A853] transition-colors duration-300">Home</Link>
+          <ChevronRight size={12} className="text-white/20" />
+          <Link to="/projects" className="hover:text-[#E8A853] transition-colors duration-300">Portfolio</Link>
+          <ChevronRight size={12} className="text-white/20" />
+          <span className="text-white/70">Brands</span>
+        </nav>
 
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>COSMETIC & SKINCARE</p>
-                  <p className='font-semibold'>CRESTORA</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/crestora" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-        </div>
-        
- {/* three - UPWAVE UNI */}
-            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={upwavelogo} alt="My Designs" className='blur-xs bg-cover rounded-2xl w-full h-full'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
+        {/* ---- Heading ---- */}
+        <section className="reveal pb-14 lg:pb-16">
+          <p className={eyebrow}>Portfolio</p>
+          <h1 className="text-[1.8rem] md:text-[2.4rem] leading-tight mt-4" style={display}>
+            Logos &amp; Brand <span className="bg-gradient-to-r from-[#E8A853] to-[#f2d6a3] bg-clip-text text-transparent">Identities.</span>
+          </h1>
+          <p className={`${body} max-w-lg mt-4`}>
+            A run of brands I've had the chance to build from the ground up — positioning, identity systems, and the visual language that carries them everywhere they show up.
+          </p>
+        </section>
 
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>EDUCATION · CORPORATE</p>
-                  <p className='font-semibold'>UPWAVE UNIVERSITY</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/upwave-university" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-        </div>
-
-      </div>
-
-
-{/* ROW 2 */}
-      
-          <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
-            {/* one - RCR */}
-            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-11 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={RCR} alt="RCR RACING" className='rounded-2xl size-45 bg-cover w-full h-full blur-xs' loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-center items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>SPORT · RACING · REBRANDING</p>
-                  <p className='font-semibold'>RCR RACING</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/RCR-RACING" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                  <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-            </div>
-
-            {/* two - SMITH XM */}
-            <div className='reveal2 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={SMITHXM} alt="SMITHXM" className='blur-xs bg-cover w-full h-full rounded-2xl' loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>CRYTOCURRENCY · TRADING</p>
-                  <p className='font-semibold'>SMITH XM GLOBAL</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/smith-xm-global" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-        </div>
-        
- {/* three - KONNEX */}
-            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between gap-7 items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={KONNEX} alt="KONNEX" className='blur-xs bg-cover rounded-2xl w-full h-full'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>TECHNOLOGY · CORPORATE</p>
-                  <p className='font-semibold'>KONNEX</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/konnex" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                    <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-        </div>
-
-      </div>
-
-{/* ROW 3 */}
-      
-          <div className='flex gap-4 flex-col md:flex-row w-full h-full' >
-            {/* one - RCR */}
-            <div className='reveal1 transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-11 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={KRONIK} alt="KRONIK" className='rounded-2xl size-45 bg-cover w-full h-full blur-xs' loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-center items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>BUILDING · CONSRTUCTION</p>
-                  <p className='font-semibold'>KRONIK</p>
-                </div>
-                <Link to="/projects/logos&brand-designs/kronik" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                  <span className='flex text-xs items-center gap-1'>View <Eye size={10} /></span>
-                </Link>
-              </div>
-            </div>
-
-           
-
-      </div>
-
-
-
-      {/* ROW 4 */}
-              <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col lg:flex-row justify-evenly  items-center py-8 px-5 w-full h-full border border-zinc-900'>
-                      {/* <img src={works} alt="MacBook Pro" className='w-50 mb-[-1.5rem]' /> */}
-            
-                      {/* <img src={works} alt="MacBook Pro" className='w-50 mb-[-1.5rem]' /> */}
-            
-                      <div className='flex justify-center items-center w-full reveal '>
-                        <div className='flex flex-col mr-auto'>
-                          <p className='text-[8px] opacity-70'>CLICK ICONS TO</p>
-                          <p className='font-semibold lg:text-2xl'>GET IN TOUCH</p>
-                        </div>
-                        {/* <a href="/" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                          <ArrowRight size={18} className='rotate-125' />
-                        </a> */}
-                              </div>
-                              
-                              <div className="socials flex gap-3 w-full h-full mr-[-1rem] reveal">
-                                  <a href="https://instagram.com/emmanuelayeni_"><img src={ig} alt="Instagram" className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                              onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                                 <a href="https://wa.me/+2349132489550"><img src={wa} alt="whatsapp" className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'    loading="eager" // Ensure logo is eagerly loaded
-                              onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                                 <a href="https://linkedin.com/in/emmanuel-ayeni01"><img src={li} alt="linkedin"className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                              onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                              </div>
-                          </div>
-      
-
-
-      <footer className="w-full bg-transparent py-6 border-t border-gray-800 mt-16 mb-20">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Left side - Copyright and name */}
-          <div className="mb-4 md:mb-0 text-center md:text-left">
-            <p className="text-gray-400 text-sm">
-              <span className="font-medium text-white">Emmanuel Ayeni</span> © {currentYear} All rights reserved
-            </p>
-          </div>
-          
-          {/* Middle - Navigation */}
-          {/* <nav className="mb-4 md:mb-0">
-            <ul className="flex space-x-6">
-              <li><a href="#home" className="text-gray-400 hover:text-white text-sm transition duration-300">Home</a></li>
-              <li><a href="#about" className="text-gray-400 hover:text-white text-sm transition duration-300">About</a></li>
-              <li><a href="#projects" className="text-gray-400 hover:text-white text-sm transition duration-300">Projects</a></li>
-              <li><a href="#contact" className="text-gray-400 hover:text-white text-sm transition duration-300">Contact</a></li>
-            </ul>
-          </nav> */}
-          
-          {/* Right side - Email */}
-          {/* <div className="text-center md:text-right">
-            <a 
-              href="mailto:eayeni105@gmail.com" 
-              className="text-gray-400 shadow-md flex gap-1.5 shadow-indigo-500 p-4 rounded-2xl text-sm hover:text-indigo-400 transition duration-300"
+        {/* ---- Cards ---- */}
+        <section className="reveal grid gap-4 md:grid-cols-3">
+          {BRAND_CARDS.map((card) => (
+            <Link
+              to={card.to}
+              key={card.title}
+              className="group flex flex-col justify-between gap-6 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-5 transition-all duration-500 hover:border-[#E8A853]/30"
+            >
+              <div className="relative rounded-2xl overflow-hidden aspect-[16/10]">
+                <img
+                  src={card.img}
+                  alt={card.title}
+                  className="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 blur-xs"
+                  loading="eager"
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}
+                />
+                <span
+                  className="absolute top-3 left-3 text-[10px] px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-sm text-white/60"
+                  style={display}
                 >
-               <Mail size={24} />   
-              eayeni105@gmail.com
-            </a>
-          </div> */}
-        </div>
+                  {card.index}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-[10px] tracking-[0.1em] uppercase text-white/35">{card.tag}</p>
+                  <h3 className="mt-1 text-[1.05rem] leading-snug" style={display}>{card.title}</h3>
+                </div>
+                <span className="shrink-0 flex items-center gap-1 text-xs text-white/50 border border-white/[0.1] group-hover:text-[#E8A853] group-hover:border-[#E8A853]/40 px-3 py-2 rounded-full transition-colors duration-300">
+                  View <Eye size={12} />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </section>
+
+        {/* ---- Get in touch ---- */}
+        <section className="reveal border-t border-white/[0.08] mt-16 lg:mt-20 pt-14 lg:pt-16">
+          <p className={eyebrow}>Get in touch</p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-7 mt-5">
+            <h2 className="text-[1.9rem] md:text-[2.4rem] leading-tight" style={display}>
+              Let's work <span className="bg-gradient-to-r from-[#E8A853] to-[#7C6FF0] bg-clip-text text-transparent">together.</span>
+            </h2>
+            <div className="flex items-center gap-3">
+              <a
+                href="mailto:eonvx3@gmail.com"
+                className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white border border-white/[0.1] hover:border-[#E8A853]/50 rounded-full px-4 py-2.5 transition-colors duration-300"
+              >
+                <Mail size={15} /> eonvx3@gmail.com
+              </a>
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-8">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                aria-label={s.label}
+                className="flex items-center justify-center size-11 rounded-full border border-white/[0.1] text-white/50 hover:text-[#E8A853] hover:border-[#E8A853]/50 hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <s.Icon size={18} strokeWidth={1.7} />
+              </a>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-between mt-14 pt-6 border-t border-white/[0.08]">
+            <p className="text-sm text-white/70" style={display}>Moyinoluwa E. Ayeni</p>
+            <p className="text-xs text-white/30">© {currentYear} All rights reserved</p>
+          </div>
+        </section>
+
       </div>
-    </footer>
-<ButtonGroup />
+
+      {/* <ButtonGroup /> */}
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+        @keyframes drift-a {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(4%, 6%) scale(1.08); }
+        }
+        @keyframes drift-b {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-5%, -4%) scale(1.06); }
+        }
+        .animate-drift-a { animation: drift-a 18s ease-in-out infinite; }
+        .animate-drift-b { animation: drift-b 22s ease-in-out infinite; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .animate-drift-a, .animate-drift-b { animation: none; }
+        }
+      `}</style>
     </div>
   )
 }

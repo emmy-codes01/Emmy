@@ -5,445 +5,374 @@ import ScrollReveal from 'scrollreveal';
 import me from '../assets/images/image.png'
 import signature from '../assets/images/sign.png'
 import works from '../assets/images/works.png'
-import what from '../assets/images/serve.png'
 import grid from '../assets/images/upwave.png'
-import ig from '../assets/images/Instagram.png'
-import li from '../assets/images/LinkedIn.png'
-import wa from '../assets/images/WhatsApp.png'
-import { ArrowRight, ArrowUp, ArrowDown, X, Eye, Mail, BadgeCheck, Users } from 'lucide-react'
-// import FuturisticLoader from '../components/Loader'
+import {
+  ArrowRight, ArrowUpRight, ChevronDown, Mail, BadgeCheck, Users,
+  Instagram, Linkedin, MessageCircle,
+} from 'lucide-react'
 
+/* ---------------------------------------------------------
+   Type system: Space Grotesk — a genuine grotesque, all
+   business in the terminals, a little wide in the counters —
+   for headlines and accent words, Inter/system sans for
+   everything utilitarian: labels, body, nav.
+   Requires the Space Grotesk webfont; @import below is a
+   self-contained fallback, but for best performance add
+   this to your document <head> instead:
+   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+   --------------------------------------------------------- */
+const display = { fontFamily: "'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" }
+
+// warm accent pulled from the "brand designer" side of the work — used sparingly
+const ACCENT = '#E8A853'
+
+const eyebrow = 'text-[10px] tracking-[0.16em] uppercase text-white/35 font-medium'
+const body = 'text-sm text-white/50 font-light leading-relaxed'
+const navLink = 'text-sm text-white/45 hover:text-white/90 transition-colors duration-300'
+const rowLink = 'inline-flex items-center gap-1 text-xs font-medium text-white/60 hover:text-[#E8A853] transition-colors duration-300'
+const underline = 'relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-[#E8A853] hover:after:w-full after:transition-all after:duration-300'
+
+const NAV = [
+  { href: '#about', label: 'About' },
+  { href: '#work', label: 'Work' },
+  { href: '#services', label: 'Services' },
+  { href: '#contact', label: 'Contact' },
+]
+
+const SOCIALS = [
+  { href: 'https://instagram.com/eonvx_', label: 'Instagram', Icon: Instagram },
+  { href: 'https://wa.me/+2349049173033', label: 'WhatsApp', Icon: MessageCircle },
+  { href: 'https://linkedin.com/in/emmanuel-ayeni01', label: 'LinkedIn', Icon: Linkedin },
+]
+
+const SERVICES = [
+  {
+    title: 'Branding',
+    desc: 'From positioning and visual identity to complete brand systems built for consistency, recognition, and growth.',
+    cta: 'https://wa.me/2349132489550?text=Hi%20Emmy,%20I%20need%20your%20Branding%20Service.',
+  },
+  {
+    title: 'Website Development',
+    desc: 'High-quality websites and digital experiences designed around your brand, your audience, and what the business actually needs.',
+    cta: 'https://wa.me/+2349049173033',
+  },
+  {
+    title: 'Graphic & Visual Design',
+    tag: '',
+    desc: "Perfectly handles Campaigns, social assets, presentations, marketing materials, and other visual work that keeps your brand looking sharp everywhere it shows up.",
+    cta: 'https://wa.me/+2349049173033',
+  },
+]
+
+const WORK = [
+  {
+    label: 'EXPLORE',
+    title: 'SELECTED WORK',
+    desc: 'A selection of brands, identities, websites, and digital products I’ve designed and built. Every project starts with a problem and ends with something built to move the business forward.',
+    img: grid,
+  },
+  {
+    label: 'EXPLORE',
+    title: 'WEBSITES',
+    desc: 'Websites and applications that combine strong visual design with clean development, intuitive experiences, and performance that holds up beyond the first impression.',
+    img: works,
+  },
+]
 
 const Home = () => {
-  const [isAboutMeOpen, setIsAboutMeOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-//   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [openService, setOpenService] = useState(null);
 
-  const toggleAboutMe = (e) => {
-    e.preventDefault();
-    setIsAboutMeOpen(!isAboutMeOpen);
-  };
-
-    const toggleServices = (e) => {
-    e.preventDefault();
-    setIsServicesOpen(!isServicesOpen);
-  };
-
-
-
-
-  
-//  useEffect(() => {
-  // Function to handle scroll event
-//   const handleScroll = () => {
-//     if (window.scrollY > 300) {
-//       document.getElementById('scrollTopBtn').classList.remove('hidden');
-//     } else {
-//       document.getElementById('scrollTopBtn').classList.add('hidden');
-//     }
-//   };
-  
-//   // Add scroll event listener
-//   window.addEventListener('scroll', handleScroll);
-  
-//   // Initial check in case page is already scrolled on load
-//   handleScroll();
-  
-//   // Cleanup event listener on component unmount
-//   return () => {
-//     window.removeEventListener('scroll', handleScroll);
-//   };
-// }, []);
-
-// Function to handle scroll to top
-// function handleScrollToTop() {
-//   window.scrollTo({
-//     top: 0,
-//     behavior: 'smooth'
-//   });
-// }
-
-    
-
-    
-    // SCROLL REVEAL
-
- useEffect(() => {
-    // ScrollReveal setup
+  useEffect(() => {
     ScrollReveal().reveal('.reveal', {
-      distance: '50px',
-      duration: 1000,
-      delay: 200,
-      easing: 'ease-in-out',
+      distance: '24px',
+      duration: 900,
+      delay: 100,
+      easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
       opacity: 0,
-      reset: false, // Optional: Reset animation on scroll back
-      scale: 0.8, // Optional: You can scale the element
+      reset: false,
     });
   }, []);
-    
-    
-    
 
-const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
-    return (
-      
-    <div className='flex flex-col text-white gap-4 px-5 lg:px-45 py-5 lg:py-15' id='home'>
-      {/* ============= ROW 1 ============= */}
-      <div id="home" className='reveal flex md:flex-row flex-col items-stretch gap-4 justify-center'>
-       {/* Left div - Profile */}
-<div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal border border-zinc-900 flex justify-center lg:flex-row items-center gap-4 md:gap-8 bg-white/3 py-5 px-5 rounded-4xl w-full md:flex-1'>
-  <img 
-    src={me} 
-    alt="Emmy" 
-    className='rounded-full md:rounded-full size-20 md:size-32 blur-xs reveal' 
-    loading="eager"
-    onLoad={(e) => e.target.classList.remove('blur-xs')}
-  />
-  <div className='flex flex-col gap-0.1 lg:text-left reveal'>
-    <p className='opacity-70 md:text-xs text-[10px]' style={{fontWeight: '300'}}> Hello I'm</p>
-    <p className='font-semibold md:text-2xl text-sm text-indigo-400'>Emmanuel Ayeni.</p>
-    <p className='md:text-sm text-[10px] opacity-70 max-w-xs' style={{fontWeight: '300'}}>A Creative Brand & Identity Designer, Web Developer, Entrepreneur, Mentor & Founder of ELIAS (A Leading Digital Services Agency)<span className='hidden lg:block'> I'm known for using my Creativity to design brands and Develop aesthetically pleasing UIs and build scalable web applications that perform efficiently and solve problems.</span></p>
-  </div>
-</div>
-        
-        {/* right div - Cards container */}
-        <div className='flex flex-col md:flex-1 gap-4 w-full md:max-w-[500px]'>
-          {/* About Me section with bottom sheet */}
-          <div id="about" className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 flex flex-col w-full border border-zinc-900 rounded-3xl reveal'>
-            <div className='flex items-center justify-between md:justify-between md:gap-14 lg:gap-40 bg-white/3 border-3xl p-5 rounded-3xl'>
-              <p className='font-semibold text-xl md:text-2xl lg:text-2xl'>
-                More <span className='text-indigo-400'>About Me.</span>
-              </p>
+  return (
+    <div className="relative min-h-screen bg-[#0a0a0b] text-[#f2f0ec] overflow-hidden" id="home">
+      {/* subtle film-grain texture — the one bit of tactility on an otherwise flat page */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 opacity-[0.035] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+        }}
+      />
 
-              <a href="#about" onClick={toggleAboutMe} className='bg-white/4 text-xs shadow-md shadow-indigo-500 p-2 rounded-full hover:bg-white/8 transition-colors animate-float'>
-                {isAboutMeOpen ? <span className='flex items-center px-1 gap-1'><X size={18} /> Collapse</span> : <span className='flex items-center px-1 gap-1'><ArrowDown size={18} /> Expand</span> }
-              </a>
-            </div>
-            
-              
-              
+      {/* two slow-drifting color blobs — the page's ambient signature, replacing the flat white glow */}
+      <div
+        className="pointer-events-none fixed -top-32 left-[12%] w-[38rem] h-[38rem] z-0 opacity-[0.16] blur-[110px] animate-drift-a"
+        style={{ background: 'radial-gradient(circle, #E8A853, transparent 65%)' }}
+      />
+      <div
+        className="pointer-events-none fixed top-40 right-[8%] w-[32rem] h-[32rem] z-0 opacity-[0.13] blur-[110px] animate-drift-b"
+        style={{ background: 'radial-gradient(circle, #7C6FF0, transparent 65%)' }}
+      />
 
-              
-            {/* Bottom Sheet Content */}
-            {isAboutMeOpen && (
-              <div 
-                className='reveal bg-white/3  rounded-3xl p-4 md:p-6 mt-1 transition-all duration-300 transform origin-top'
-                style={{
-                  animation: 'slideIn 0.3s ease-out forwards',
-                }}
-              >
-               <div className='grid md:grid-cols-2 gap-4 md:gap-4'>
-                  <div>
-                    <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>My Journey</h3>
-                    <p className='text-xs md:text-sm opacity-80 mb-3 md:mb-4' style={{fontWeight: '300'}}>
-                      I started my design and development journey with a passion for creating 
-                      visually appealing and functional digital experiences. Over the years, 
-                      I've honed my skills in both brand design and web development.
-                    </p>
-                    <p className='text-xs md:text-sm opacity-80' style={{fontWeight: '300'}}>
-                      I combine creativity with technical expertise to deliver solutions 
-                      that not only look great but also perform exceptionally well.
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>My Approach</h3>
-                    <p className='text-xs md:text-sm opacity-80 mb-3 md:mb-4' style={{fontWeight: '300'}}>
-                      I believe in understanding the core of each project before diving into design or code. 
-                      This allows me to create brands and websites that truly represent my clients' vision 
-                      and meet their business objectives.
-                    </p>
-                    <p className='text-xs md:text-sm opacity-80' style={{fontWeight: '300'}}>
-                      Whether designing a brand identity or developing a web application, I focus on 
-                      creating work that's both aesthetically pleasing and functionally sound.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className='mt-4 md:mt-6'>
-                  <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>Skills & Technologies</h3>
-                  <div className='flex flex-wrap gap-2'>
-                    {['Adobe Creative Suite', 'Brand Design', 'UI/UX', 'React', 'Next.js', 
-                      'Tailwind CSS', 'JavaScript', 'Node.js', 'MongoDB'].map((skill) => (
-                      <span key={skill} className='px-2 md:px-3 py-1 bg-white/5 rounded-full text-[10px] md:text-xs'>
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+      <div className="relative z-10 max-w-[1200px] mx-auto px-5 sm:px-8 lg:px-12 py-10 lg:py-16">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-14">
+
+          {/* ============= SIDEBAR ============= */}
+          <aside className="lg:col-span-4 lg:sticky lg:top-16 lg:h-fit reveal flex flex-col gap-9 pb-10 lg:pb-0 border-b border-white/[0.08] lg:border-b-0 mb-10 lg:mb-0">
+            <div className="flex items-center gap-4 lg:flex-col lg:items-start lg:gap-5">
+              <div className="relative shrink-0">
+                <img
+                  src={me}
+                  alt="Emmanuel Ayeni"
+                  className="rounded-full size-16 lg:size-20 ring-1 ring-white/[0.12] ring-offset-4 ring-offset-[#0a0a0b] hover:ring-[#E8A853]/50 transition-all duration-500 blur-xs"
+                  loading="eager"
+                  onLoad={(e) => e.target.classList.remove('blur-xs')}
+                />
+                <span className="absolute bottom-0.5 right-0.5 lg:bottom-1 lg:right-1 size-3 rounded-full bg-[#7CE87C] ring-2 ring-[#0a0a0b] animate-pulse-soft" />
               </div>
-            )}
-          </div>
-
-          {/* Cards wrapper */}
-          <div className='flex gap-4 flex-col md:flex-row w-full h-full' id="projects">
-            {/* one - Credentials */}
-            <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col gap-4 justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={grid} alt="logo compilation" className='rounded-2xl size-45 w-full blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>I DELIVER PREMIUM</p>
-                  <p className='font-semibold'>BRAND DESIGNS</p>
-                </div>
-                <Link to="/projects" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                  <span className='flex gap-1 text-xs items-center'>Portfolio <ArrowRight size={10} /></span>
-                </Link>
+              <div>
+                <p className="text-lg" style={display}>Moyinoluwa E. Ayeni</p>
+                <p className="text-xs text-white/40 mt-0.5 tracking-wide flex items-center gap-1.5">
+                  Designer &amp; Strategist
+                  <span className="text-[#7CE87C]/80">· Open for work</span>
+                </p>
               </div>
             </div>
 
-            {/* two - Projects */}
-            <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-              <img src={works} alt="MacBook Pro" className='w-50 mb-[-1.5rem] blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-              <div className='flex justify-end items-center w-full'>
-                <div className='flex flex-col mr-auto'>
-                  <p className='text-[8px] opacity-70'>I DEVELOP FAST & SCALABLE</p>
-                  <p className='font-semibold'>WEB APPLICATIONS</p>
-                </div>
-                <Link to="/projects" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-                  <span className='flex gap-1 text-xs items-center'>Portfolio <ArrowRight size={10} /></span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ============= ROW 2 ============= */}
-      <div className='flex flex-col md:grid md:grid-cols-3  lg:flex lg:flex-row lg:gap-4 gap-4'>
-        {/* first */}
-        <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal flex lg:flex-row flex-col md:grid md:grid-cols-3 items-stretch gap-4 justify-between bg-white/3 border-3xl py-14.5 px-5 rounded-3xl w-full h-full border border-zinc-900'>
-  <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full h-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>04+</p>
-    <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Years <br /> Experience</p>
-  </div>
-  <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>60+</p>
-    <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Clients worked with</p>
-  </div>
-  <div className='reveal bg-white/1.5 px-3 py-8 rounded-3xl text-center w-full shadow-md shadow-indigo-500'>
-    <p className='text-3xl md:text-2xl font-semibold'>125+</p>
-    <p className='opacity-60 text-xs text-center' style={{fontWeight: '300'}}>Projects completed</p>
-  </div>
-</div>
-              
-
-
-        {/* second */}
-        <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-        <img src={what} alt="MY SERVICES" className='reveal w-50 md:w-40 blur-xs' loading="eager" onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-          <div className='flex justify-center gap-[-1rem] items-center w-full'>
-            <div className='flex flex-col mr-auto'>
-              <p className='text-[8px] opacity-70'>MY</p>
-              <p className='font-semibold'>SERVICES</p>
-            </div>
-            <a href="#services" onClick={toggleServices} className='bg-white/4 text-xs p-2 rounded-full shadow-md shadow-indigo-500 flex flex-row '>
-               {isServicesOpen ? <span className='flex items-center px-1 gap-1'><X size={18} /> Collapse</span> : <span className='flex items-center px-1 gap-1'><ArrowDown size={18} /> Expand</span> }
-            </a>
-            </div>
-            
-
-
-
-            {isServicesOpen && (
-              <div 
-                className='reveal bg-white/3 rounded-3xl p-4 md:p-6 mt-1 transition-all duration-300 transform origin-top'
-                style={{
-                  animation: 'slideIn 0.3s ease-out forwards',
-                }}
-              >
-                <div className='grid md:grid-cols-2 gap-6 md:gap-6 lg:gap-8'>
-                  <div>
-                    <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>Branding & Rebranding</h3>
-                    <p className='text-xs md:text-sm opacity-80 mb-3 md:mb-4' style={{fontWeight: '300'}}>
-                     I will help you create a strong brand identity that is perfect for you or your business. From logos to brand strategy, I will make sure your brand looks professional and feels right for your audience.
-                    </p>
-                    <p className='text-xs md:text-sm opacity-80 hidden' style={{fontWeight: '300'}}>
-                      I combine creativity with technical expertise to deliver solutions 
-                      that not only look great but also perform exceptionally well.
-                    </p>
-                    <a href="https://wa.me/2349132489550?text=Hi%20Emmy,%20I%20need%20your%20Branding%20Service." className='bg-indigo-500 text-white px-2 py-2 text-xs rounded-full border border-black'>I need this</a>
-                  </div>
-                  
-                  <div>
-                    <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>Website Development 🧑‍💻</h3>
-                    <p className='text-xs md:text-sm opacity-80 mb-3 md:mb-4' style={{fontWeight: '300'}}>
-                     I design and develop websites that are fast, user-friendly, and visually appealing. Whether you need a simple portfolio or a full business website or landingpage, I make sure it works smoothly and looks great 😉.
-                    </p>
-                    <p className='text-xs md:text-sm opacity-80 hidden' style={{fontWeight: '300'}}>
-                      Whether designing a brand identity or developing a web application, I focus on 
-                      creating work that's both aesthetically pleasing and functionally sound.
-                    </p>
-                     <a href="https://wa.me/2349132489550?text=Hi%20Emmy,%20I%20need%20a%20Website." className='bg-indigo-500 text-white px-2 py-2 text-xs rounded-full border border-black'>I need this</a>
-                  </div>
-                </div>
-                
-                <div className='mt-4 md:mt-6'>
-                  <h3 className='text-lg md:text-xl font-semibold mb-3 md:mb-4 text-indigo-400'>Graphic Designing <span className='text-amber-300 flex items-center gap-1'>(Subscription Only <BadgeCheck className="" size={18} />)</span></h3>
-                  <p className='text-xs md:text-sm opacity-80 mb-3 md:mb-4' style={{fontWeight: '300'}}>
-                    Great designs ain't a one-time thing, it’s ongoing. <span className='font-medium'>My subscription service</span> gives you <span className='text-amber-300'>unlimited, high-quality designs </span>whenever you need them, without the hassle of hiring a full-time designer 😲. It’s the most cost-effective and convenient way to keep your brand looking fresh 😜.
-                  </p>
-                  <a href="https://wa.me/2349132489550?text=Hi%20Emmy,%20please%20send%20me%20your%20Graphic%20Design%20subscription%20Packages." className='bg-indigo-500 text-white px-2 py-2 text-xs rounded-full border border-black'>I need this</a>
-                  
-                </div>
-              </div>
-            )}
-        </div>
-
-        {/* third */}
-        
-        <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal bg-white/3 rounded-4xl flex flex-col justify-between items-center py-5 px-5 w-full h-full border border-zinc-900'>
-          <img src={signature} alt="MacBook Pro" className='reveal w-50 mb-[-1.5rem] blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/>
-
-          <div className='flex justify-end items-center w-full'>
-            <div className='flex flex-col mr-auto'>
-              <p className='text-[8px] opacity-70'></p>
-              <p className='font-semibold'>CREDENTIALS</p>
-            </div>
-            <a href="https://linkedin.com/in/emmanuel-ayeni01" className='bg-white/4 flex gap-1.5 p-1.5 cursor-pointer rounded-full shadow-md shadow-indigo-500 text-xs'>
-                {/* <ArrowRight size={18} className='rotate-45'/> */}
-              <Eye size={18} />  View on linkedIn
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* ============= ROW 3 ============= */}
-        <div className='reveal flex lg:flex-row flex-col items-stretch lg:gap-[-2rem] gap-2 justify-center ' id='contact'>
-          {/* one */}
-       <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 bg-white/3 rounded-4xl flex flex-col lg:flex-row md:flex-row justify-between items-center py-8 px-5 w-full h-full border border-zinc-900'>
-          {/* <img src={works} alt="MacBook Pro" className='w-50 mb-[-1.5rem]' /> */}
-
-          {/* <img src={works} alt="MacBook Pro" className='w-50 mb-[-1.5rem]' /> */}
-
-          <div className='flex justify-center items-center w-full reveal '>
-            <div className='flex flex-col mr-auto'>
-              <p className='text-[8px] opacity-70'>CLICK ICONS TO</p>
-              <p className='font-semibold lg:text-2xl'>GET IN TOUCH</p>
-            </div>
-            {/* <a href="/" className='bg-white/4 p-2 rounded-full shadow-md shadow-indigo-500'>
-              <ArrowRight size={18} className='rotate-125' />
-            </a> */}
-                  </div>
-                  
-                  <div className="socials flex md:ml-[3rem] gap-3 w-full h-full mr-[-1rem] reveal">
-                      <a href="https://instagram.com/emmanuelayeni_"><img src={ig} alt="Instagram" className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                     <a href="https://wa.me/+2349132489550"><img src={wa} alt="whatsapp" className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'    loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                     <a href="https://linkedin.com/in/emmanuel-ayeni01"><img src={li} alt="linkedin"className='reveal size-20 transition-transform duration-300 hover:scale-130 blur-xs'   loading="eager" // Ensure logo is eagerly loaded
-                  onLoad={(e) => e.target.classList.remove('blur-xs')}/></a>
-                  </div>
-              </div>
-
-        {/* two */}
-        <div className='transition-all hover:shadow-lg hover:shadow-indigo-500/50 reveal flex items-center justify-between lg:gap-40 gap-6 bg-white/3 border-3xl py-8 px-7 rounded-3xl w-full h-full border border-zinc-900'>
-          <p className='font-semibold text-2xl lg:text-4xl'>
-            Let's <br /> work <span className='text-indigo-400'>together.</span>
-          </p>
-
-          <Link to="/reviews" className='bg-white/4 p-2 px-3 rounded-full mt-6 shadow-md shadow-indigo-500 text-xs animate-float'>
-              <span className='flex flex-row gap-1'>
-                <Users size={18} />
-             Reviews
-             </span>
-          </Link>
-        </div>
-      </div>
-
-      {/* Scroll to Top Button */}
-     {/* <button
-  id="scrollTopBtn"
-  onClick={handleScrollToTop}
-  className="fixed bottom-6 right-6 z-50 hidden flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full shadow-md shadow-indigo-500 hover:bg-gray-800 transition-all duration-300"
->
-  <ArrowUp className="w-5 h-5" />
-  <span className="text-sm font-medium">Top</span>
-</button> */}
-          
-<footer className="w-full bg-transparent py-6 border-t border-gray-800 mt-16 mb-20">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Left side - Copyright and name */}
-          <div className="mb-4 md:mb-0 text-center md:text-left">
-            <p className="text-gray-400 text-sm">
-              <span className="font-medium text-white">Emmanuel Ayeni</span> © {currentYear} All rights reserved
+            <p className={`${body} max-w-xs`}>
+              Founder of <span className="text-[#E8A853]">Monolith Studios®</span>. I build brands people remember and digital products people actually use.
             </p>
-          </div>
-          
-          {/* Middle - Navigation */}
-          {/* <nav className="mb-4 md:mb-0">
-            <ul className="flex space-x-6">
-              <li><a href="#home" className="text-gray-400 hover:text-white text-sm transition duration-300">Home</a></li>
-              <li><a href="#about" className="text-gray-400 hover:text-white text-sm transition duration-300">About</a></li>
-              <li><a href="#projects" className="text-gray-400 hover:text-white text-sm transition duration-300">Projects</a></li>
-              <li><a href="#contact" className="text-gray-400 hover:text-white text-sm transition duration-300">Contact</a></li>
-            </ul>
-          </nav> */}
-          
-          {/* Right side - Email */}
-          <div className="text-center md:text-right">
-            <a 
-              href="mailto:eayeni185@gmail.com" 
-              className="text-gray-400 shadow-md flex gap-1.5 shadow-indigo-500 p-4 rounded-2xl text-sm hover:text-indigo-400 transition duration-300"
+
+            <Link
+              to="/blogs"
+              className="group inline-flex items-center gap-2 self-start text-sm text-white/70 hover:text-[#E8A853] transition-colors duration-300"
+            >
+              Insights &amp; Articles
+              <ArrowUpRight size={14} className="text-white/40 group-hover:text-[#E8A853] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+            </Link>
+
+            <nav className="hidden lg:flex flex-col gap-3.5">
+              {NAV.map((n) => (
+                <a key={n.href} href={n.href} className={`${navLink} ${underline} self-start`}>{n.label}</a>
+              ))}
+            </nav>
+
+            <div className="flex gap-3">
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="group flex items-center justify-center size-9 rounded-full border border-white/[0.1] text-white/40 hover:text-[#E8A853] hover:border-[#E8A853]/50 hover:-translate-y-0.5 transition-all duration-300"
                 >
-               <Mail size={24} />   
-              eayeni185@gmail.com
-            </a>
-          </div>
+                  <s.Icon size={16} strokeWidth={1.75} />
+                </a>
+              ))}
+            </div>
+          </aside>
+
+          {/* ============= MAIN COLUMN ============= */}
+          <main className="lg:col-span-8 flex flex-col">
+
+            {/* ---- Intro + stats ---- */}
+            <section className="reveal pb-14 lg:pb-16">
+              <p className={eyebrow}>I'm Emmanuel</p>
+              <h1 className="text-[1.65rem] md:text-[2.6rem] leading-[1.2] md:leading-[1.18] mt-4 max-w-2xl" style={display}>
+                Your {' '}
+                <span className="bg-gradient-to-r from-[#E8A853] to-[#7C6FF0] bg-clip-text text-transparent">Creative Partner</span>
+                <span className="text-white/40 text-[0.65em] block mt-3 font-sans font-light leading-relaxed">
+                  I turn ideas, businesses, and products into clear visual systems and functional digital experiences built to last.
+                </span>
+              </h1>
+
+              <div className="flex mt-11 divide-x divide-white/[0.1]">
+                {[
+                  { n: '04+', l: 'Years building' },
+                  { n: '60+', l: 'Clients Worldwide' },
+                  { n: '100+', l: 'Projects Completed' },
+                ].map((s) => (
+                  <div key={s.l} className="group px-6 first:pl-0 cursor-default">
+                    <p className="text-xl md:text-2xl group-hover:text-[#E8A853] transition-colors duration-300" style={display}>{s.n}</p>
+                    <p className="text-[11px] text-white/40 font-light mt-1.5 tracking-wide">{s.l}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* ---- About ---- */}
+            <section id="about" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
+              <p className={eyebrow}>01 — About</p>
+              <div className="grid md:grid-cols-2 gap-10 mt-6">
+                <div>
+                  <h3 className="mb-2.5 text-[1.05rem]" style={display}>More Than A Designer</h3>
+                  <p className={body}>
+                   I work where brand, design, and technology meet. From Brand Identity systems and visual direction to websites and web applications, I handle the work from concept to execution.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="mb-2.5 text-[1.05rem]" style={display}>How I Work</h3>
+                  <p className={body}>
+                    No decoration for the sake of decoration. No design without a reason.
+
+I start with the problem, understand the business, then build the visual and digital system around it. The result should look right, work properly, and make sense long after the launch.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-2 mt-9">
+                {['Brand Identity', 'Art Direction', 'Web Development', 'Creative Direction', 'Brand Strategy',
+                  'Visual Systems'].map((skill) => (
+                  <span key={skill} className="text-[11px] text-white/40 border border-white/[0.1] rounded-full px-3 py-1 hover:text-[#E8A853] hover:border-[#E8A853]/40 transition-colors duration-300 cursor-default">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            {/* ---- Work ---- */}
+            <section id="work" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
+              <div className="flex items-center justify-between mb-7">
+                <p className={eyebrow}>02 — Selected Work</p>
+                <Link to="/projects" className={`${rowLink} ${underline}`}>
+                  Full portfolio <ArrowRight size={13} />
+                </Link>
+              </div>
+
+              <div className="flex flex-col divide-y divide-white/[0.08] border-t border-white/[0.08]">
+                {WORK.map((w) => (
+                  <Link
+                    to="/projects"
+                    key={w.title}
+                    className="group flex flex-col sm:flex-row items-start sm:items-center gap-6 py-8 -mx-3 px-3 rounded-xl transition-colors duration-300 hover:bg-white/[0.02]"
+                  >
+                    <div className="w-full sm:w-36 h-32 sm:h-24 rounded-lg overflow-hidden shrink-0 ring-1 ring-white/[0.06] group-hover:ring-[#E8A853]/40 transition-all duration-500">
+                      <img
+                        src={w.img}
+                        alt={w.title}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 blur-xs"
+                        loading="eager"
+                        onLoad={(e) => e.target.classList.remove('blur-xs')}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[11px] text-white/35 uppercase tracking-wide">{w.label}</p>
+                      <h3 className="mt-1 text-lg" style={display}>{w.title}</h3>
+                      <p className={`${body} mt-1.5 max-w-md`}>{w.desc}</p>
+                    </div>
+                    <ArrowUpRight
+                      size={18}
+                      className="text-white/30 group-hover:text-[#E8A853] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0"
+                    />
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* ---- Services ---- */}
+            <section id="services" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
+              <p className={eyebrow}>03 — Services</p>
+
+              <div className="flex flex-col divide-y divide-white/[0.08] border-t border-white/[0.08] mt-6">
+                {SERVICES.map((s, i) => {
+                  const isOpen = openService === i;
+                  return (
+                    <div key={s.title} className={`transition-colors duration-300 ${isOpen ? 'bg-white/[0.015]' : ''}`}>
+                      <button
+                        onClick={() => setOpenService(isOpen ? null : i)}
+                        className="w-full flex items-center justify-between py-5 px-2 -mx-2 text-left group"
+                      >
+                        <span className="text-[1.05rem] flex items-center gap-2.5" style={display}>
+                          <span className={`transition-colors duration-300 ${isOpen ? 'text-[#E8A853]' : ''}`}>{s.title}</span>
+                          {s.tag && (
+                            <span className="text-[10px] text-white/40 border border-white/[0.1] rounded-full px-2 py-0.5 flex items-center gap-1 font-sans font-normal">
+                              {s.tag} <BadgeCheck size={11} />
+                            </span>
+                          )}
+                        </span>
+                        <ChevronDown
+                          size={16}
+                          className={`transition-all duration-300 ${isOpen ? 'rotate-180 text-[#E8A853]' : 'text-white/35 group-hover:text-white/70'}`}
+                        />
+                      </button>
+                      {isOpen && (
+                        <div className="reveal pb-7 px-2 max-w-lg">
+                          <p className={`${body} mb-4`}>{s.desc}</p>
+                          <a href={s.cta} className="inline-block text-[11px] font-medium px-4 py-2 rounded-full bg-[#E8A853] text-black hover:bg-[#f2d6a3] transition-colors duration-300">
+                            I need this
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* ---- Contact ---- */}
+            <section id="contact" className="reveal border-t border-white/[0.08] pt-14 lg:pt-16">
+              <p className={eyebrow}>04 — Contact</p>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mt-5">
+                <h2 className="text-[1.9rem] md:text-[2.4rem] leading-tight" style={display}>
+                  Let's work <span className="bg-gradient-to-r from-[#E8A853] to-[#7C6FF0] bg-clip-text text-transparent">together.</span>
+                </h2>
+                <p className={`${body} max-w-xs`}> Have a brand to build, a website to launch, or an idea that needs to become real?</p>
+
+              
+                <div className="flex items-center gap-3 mt-2">
+                  <a
+                    href="mailto:eonvx3@gmail.com"
+                    className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white border border-white/[0.1] hover:border-[#E8A853]/50 rounded-full px-4 py-2.5 transition-colors duration-300"
+                  >
+                    <Mail size={15} /> eonvx3@gmail.com
+                  </a>
+                  <Link
+                    to="/reviews"
+                    className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white border border-white/[0.1] hover:border-[#E8A853]/50 rounded-full px-4 py-2.5 transition-colors duration-300"
+                  >
+                    <Users size={15} /> Feedbacks
+                  </Link>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between mt-14 pt-6 border-t border-white/[0.08]">
+                <a href="https://linkedin.com/in/emmanuel-ayeni01" className="opacity-60 hover:opacity-100 transition-opacity duration-300">
+                  <img src={signature} alt="Signature" className="h-12" />
+                </a>
+                <p className="text-xs text-white/30">
+                  © {currentYear} Emmanuel Ayeni
+                </p>
+              </div>
+            </section>
+
+          </main>
         </div>
       </div>
-    </footer>
 
-        
-        {/* Menu */}
-        <BottomMenu />
+      <BottomMenu />
 
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
-      {/* Add the CSS animations */}
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        @keyframes drift-a {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(4%, 6%) scale(1.08); }
         }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        @keyframes drift-b {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-5%, -4%) scale(1.06); }
         }
-
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
+        @keyframes pulse-soft {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.45; }
         }
+        .animate-drift-a { animation: drift-a 18s ease-in-out infinite; }
+        .animate-drift-b { animation: drift-b 22s ease-in-out infinite; }
+        .animate-pulse-soft { animation: pulse-soft 2.4s ease-in-out infinite; }
 
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out forwards;
+        @media (prefers-reduced-motion: reduce) {
+          .animate-drift-a, .animate-drift-b, .animate-pulse-soft { animation: none; }
         }
       `}</style>
     </div>
