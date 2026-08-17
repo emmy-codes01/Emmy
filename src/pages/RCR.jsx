@@ -154,7 +154,7 @@ const RCR = () => {
 
       <ButtonGroup />
     </div>
-  )
+  ) 
 }
 
 export default RCR

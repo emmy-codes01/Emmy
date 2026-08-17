@@ -31,14 +31,14 @@ const PROJECT_CARDS = [
     desc: 'Portfolios, business sites, and products that load fast, read clearly, and hold up under real use.',
     to: '/projects/websites',
   },
-  {
-    index: '03',
-    img: designs,
-    label: 'EXPLORE',
-    title: 'CUSTOM GRAPHICS',
-    desc: 'Campaign assets, social visuals, and marketing materials that keep a brand looking sharp everywhere it shows up.',
-    to: '/projects/graphic-designs',
-  },
+  // {
+  //   index: '03',
+  //   img: designs,
+  //   label: 'EXPLORE',
+  //   title: 'CUSTOM GRAPHICS',
+  //   desc: 'Campaign assets, social visuals, and marketing materials that keep a brand looking sharp everywhere it shows up.',
+  //   to: '/projects/graphic-designs',
+  // },
 ]
 
 // Same handles as Home.jsx — kept identical across pages on purpose.
