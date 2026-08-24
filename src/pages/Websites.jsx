@@ -28,7 +28,7 @@ const Websites = () => {
   useEffect(() => {
     document.title = "Websites by Emmy";
     return () => {
-      document.title = "Emmanuel Ayeni";
+      document.title = "Elias E.";
     };
   }, []);
 
@@ -114,7 +114,7 @@ const Websites = () => {
         {/* ============= FOOTER ============= */}
         <footer className="w-full border-t border-white/[0.08] pt-6 pb-24 mt-10">
           <p className="text-xs text-white/30 text-center md:text-left">
-            <span className="text-white/60">Emmanuel Ayeni</span> © {currentYear} All rights reserved
+            <span className="text-white/60">Elias E.</span> © {currentYear} All rights reserved
           </p>
         </footer>
       </div>

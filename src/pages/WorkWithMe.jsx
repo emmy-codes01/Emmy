@@ -202,7 +202,7 @@ const WorkWithMe = () => {
         <footer className="w-full border-t border-white/[0.08] pt-6 pb-20">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <p className="text-xs text-white/30">
-              <span className="text-white/60">Emmanuel Ayeni</span> — prefer to write directly?
+              <span className="text-white/60">Elias</span> — prefer to write directly?
             </p>
             <a
               href={`mailto:${TO_EMAIL}`}

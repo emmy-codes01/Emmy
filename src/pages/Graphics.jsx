@@ -43,7 +43,7 @@ const Graphics = () => {
     
     // Optional: Reset title when component unmounts
     return () => {
-      document.title = "Emmanuel Ayeni";
+      document.title = "Elias E.";
     };
   }, []);
 
@@ -741,7 +741,7 @@ const Graphics = () => {
           {/* Left side - Copyright and name */}
           <div className="mb-4 md:mb-0 text-center md:text-left">
             <p className="text-gray-400 text-sm">
-              <span className="font-medium text-white">Emmanuel Ayeni</span> © {currentYear} All rights reserved
+              <span className="font-medium text-white">Elias E.</span> © {currentYear} All rights reserved
             </p>
           </div>
           

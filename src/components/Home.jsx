@@ -126,7 +126,7 @@ const Home = () => {
               <div className="relative shrink-0">
                 <img
                   src={me}
-                  alt="Emmanuel Ayeni"
+                  alt="Elias E."
                   className="rounded-full size-16 lg:size-20 ring-1 ring-white/[0.12] ring-offset-4 ring-offset-[#0a0a0b] hover:ring-[#E8A853]/50 transition-all duration-500 blur-xs"
                   loading="eager"
                   onLoad={(e) => e.target.classList.remove('blur-xs')}
@@ -134,7 +134,7 @@ const Home = () => {
                 <span className="absolute bottom-0.5 right-0.5 lg:bottom-1 lg:right-1 size-3 rounded-full bg-[#7CE87C] ring-2 ring-[#0a0a0b] animate-pulse-soft" />
               </div>
               <div>
-                <p className="text-lg" style={display}>Moyinoluwa E. Ayeni</p>
+                <p className="text-lg" style={display}>Elias E.</p>
                 <p className="text-xs text-white/40 mt-0.5 tracking-wide flex items-center gap-1.5">
                   Designer &amp; Strategist
                   <span className="text-[#7CE87C]/80">· Open for work</span>
@@ -342,7 +342,7 @@ I start with the problem, understand the business, then build the visual and dig
                   <img src={signature} alt="Signature" className="h-12" />
                 </a>
                 <p className="text-xs text-white/30">
-                  © {currentYear} Emmanuel Ayeni
+                  © {currentYear} Elias E.
                 </p>
               </div>
             </section>

@@ -260,7 +260,7 @@ const BlogPostDetail = ({ selectedPost, onBack, onLike, onDislike, onShare }) =>
 
       <div className="bg-white/[0.03] border border-white/[0.08] rounded-3xl overflow-hidden">
         <div className="flex items-center gap-3 px-6 py-4 border-b border-white/[0.08]">
-          <img src={model} alt="Emmanuel Ayeni" className="size-10 rounded-full object-cover ring-1 ring-white/[0.1]" />
+          <img src={model} alt="Elias E." className="size-10 rounded-full object-cover ring-1 ring-white/[0.1]" />
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-white/90" style={display}>Moyinoluwa E. Ayeni</span>
@@ -523,7 +523,7 @@ const Blog = () => {
             Insights, articles &amp; <span className="bg-gradient-to-r from-[#E8A853] to-[#f2d6a3] bg-clip-text text-transparent">everything else.</span>
           </h1>
           <div className="flex items-center gap-2.5 mt-5">
-            <img src={model} alt="Emmanuel Ayeni" className="size-8 rounded-full object-cover ring-1 ring-white/[0.1]" />
+            <img src={model} alt="Elias E." className="size-8 rounded-full object-cover ring-1 ring-white/[0.1]" />
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-white/70" style={display}>Moyinoluwa E. Ayeni</span>
               <VerifiedBadge size={14} gradientId="badge-header" />
