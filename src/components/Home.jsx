@@ -236,7 +236,7 @@ I start with the problem, understand the business, then build the visual and dig
             <section id="work" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
               <div className="flex items-center justify-between mb-7">
                 <p className={eyebrow}>02 — Selected Work</p>
-                <Link to="/projects" className={`${rowLink} ${underline}`}>
+                <Link to="/projects/logos&brand-designs" className={`${rowLink} ${underline}`}>
                   Full portfolio <ArrowRight size={13} />
                 </Link>
               </div>
@@ -244,7 +244,7 @@ I start with the problem, understand the business, then build the visual and dig
               <div className="flex flex-col divide-y divide-white/[0.08] border-t border-white/[0.08]">
                 {WORK.map((w) => (
                   <Link
-                    to="/projects"
+                    to="/projects/logos&brand-designs"
                     key={w.title}
                     className="group flex flex-col sm:flex-row items-start sm:items-center gap-6 py-8 -mx-3 px-3 rounded-xl transition-colors duration-300 hover:bg-white/[0.02]"
                   >
@@ -272,7 +272,7 @@ I start with the problem, understand the business, then build the visual and dig
             </section>
 
             {/* ---- Services ---- */}
-            <section id="services" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
+            {/* <section id="services" className="reveal border-t border-white/[0.08] py-14 lg:py-16">
               <p className={eyebrow}>03 — Services</p>
 
               <div className="flex flex-col divide-y divide-white/[0.08] border-t border-white/[0.08] mt-6">
@@ -309,7 +309,7 @@ I start with the problem, understand the business, then build the visual and dig
                   );
                 })}
               </div>
-            </section>
+            </section> */}
 
             {/* ---- Contact ---- */}
             <section id="contact" className="reveal border-t border-white/[0.08] pt-14 lg:pt-16">
