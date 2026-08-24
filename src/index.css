@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+/* index.css or globals.css */
+:root {
+  --bg-primary: #0a0a0b;
+  --text-primary: #f2f0ec;
+  --text-secondary: rgba(255,255,255,0.5);
+  --text-tertiary: rgba(255,255,255,0.35);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.1);
+  --surface-hover: rgba(255,255,255,0.02);
+  --accent: #E8A853;
+  --accent-2: #7C6FF0;
+  --success: #7CE87C;
+}
+
+html.light {
+  --bg-primary: #f7f5f1;
+  --text-primary: #14130f;
+  --text-secondary: rgba(20,19,15,0.6);
+  --text-tertiary: rgba(20,19,15,0.4);
+  --border: rgba(20,19,15,0.1);
+  --border-hover: rgba(20,19,15,0.15);
+  --surface-hover: rgba(20,19,15,0.03);
+  --accent: #C9821F;
+  --accent-2: #5B4FD1;
+  --success: #3FA33F;
+}
+
+
 
 .montserrat {
   font-family: "Montserrat", sans-serif;

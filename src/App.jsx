@@ -21,6 +21,7 @@ import Smith from './pages/Smith';
 import Konnex from './pages/Konnex';
 import Kronik from './pages/Kronik';
 import Blog from './pages/Blog'
+import WorkWithMe from './pages/WorkWithMe'
 // import Chatbot from './components/Bot';
 import NotFound from './components/NotFound';
 import BlogPostUploader from './pages/BlogPostUploader'
@@ -150,6 +151,7 @@ const App = () => {
             <Route path="/clients" element={<Clients />} />
             <Route path="/reviews" element={<LiveChat />} />
             <Route path="/blogs" element={<Blog />} />
+            <Route path="/workwithme" element={<WorkWithMe />} />
              <Route path="*" element={<NotFound />} />
             {/* <Route path="/bot" element={<Chatbot />} /> */}
             <Route path="/upload-blog" element={<BlogPostUploader/>} />
