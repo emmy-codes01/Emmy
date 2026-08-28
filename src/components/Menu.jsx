@@ -15,7 +15,7 @@ const BottomMenu = () => {
   const menuItems = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'about', icon: User, label: 'About' },
-    { id: 'projects', icon: Briefcase, label: 'Projects' },
+    { id: 'work', icon: Briefcase, label: 'Work' },
     { id: 'contact', icon: Mail, label: 'Contact' },
   ];
 

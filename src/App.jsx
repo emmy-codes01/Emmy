@@ -21,6 +21,7 @@ import Smith from './pages/Smith';
 import Konnex from './pages/Konnex';
 import Kronik from './pages/Kronik';
 import Blog from './pages/Blog'
+import Cashzen from './pages/Cashzen';
 import WorkWithMe from './pages/WorkWithMe'
 // import Chatbot from './components/Bot';
 import NotFound from './components/NotFound';
@@ -147,6 +148,7 @@ const App = () => {
             <Route path="/projects/logos&brand-designs/smith-xm-global" element={<Smith />} />
             <Route path="/projects/logos&brand-designs/konnex" element={<Konnex />} />
             <Route path="/projects/logos&brand-designs/kronik" element={<Kronik />} />
+            <Route path="/projects/logos&brand-designs/cashzen" element={<Cashzen />} />
             <Route path="/projects/websites" element={<Websites />} />
             <Route path="/clients" element={<Clients />} />
             <Route path="/reviews" element={<LiveChat />} />

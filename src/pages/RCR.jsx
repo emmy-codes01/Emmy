@@ -11,6 +11,10 @@ import grid from '../assets/images/RCR/grid.png'
 import website from '../assets/images/RCR/website.png'
 import cap from '../assets/images/RCR/cap.png'
 import image from '../assets/images/RCR/image.png'
+import iphone from '../assets/images/RCR/iphone.png'
+import offwhite from '../assets/images/RCR/offwhite.png'
+import banner from '../assets/images/RCR/banner.png'
+import city from '../assets/images/RCR/city.png'
 
 /* ---------------------------------------------------------
    Same system as Home / NotFound / Crestora / Oasis: Space
@@ -93,26 +97,38 @@ const RCR = () => {
         </header>
 
         {/* ============= GALLERY — no tags, no captions, original proportions ============= */}
-        <main className="flex flex-col gap-4 py-4 lg:py-6">
+<main className="flex flex-col gap-4 py-4 lg:py-6">
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
-            <img src={onwhite} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
-            <img src={onblack} alt="" className={`reveal ${img}`} loading="eager" onLoad={onLoadClear} />
-            <img src={onred} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
-          </div>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+    <img src={onwhite} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={onblack} alt="" className={`reveal ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={onred} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
+  </div>
 
-          <img src={grid} alt="" className={`reveal ${img}`} loading="eager" onLoad={onLoadClear} />
+  <img src={grid} alt="" className={`reveal ${img}`} loading="eager" onLoad={onLoadClear} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-            <img src={cap} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
-            <img src={image} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
-          </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <img src={cap} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={image} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
+  </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-            <img src={website} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
-            <img src={tv} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
-          </div>
-        </main>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <img src={website} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={tv} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
+  </div>
+
+  {/* NEW ATTACHMENTS */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <img src={iphone} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={offwhite} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <img src={banner} alt="" className={`reveal1 ${img}`} loading="eager" onLoad={onLoadClear} />
+    <img src={city} alt="" className={`reveal2 ${img}`} loading="eager" onLoad={onLoadClear} />
+  </div>
+
+</main>
 
         {/* ============= CONTACT ============= */}
         <section className="reveal border-t border-white/[0.08] mt-10 pt-14 lg:pt-16 pb-16">
@@ -147,7 +163,7 @@ const RCR = () => {
         {/* ============= FOOTER ============= */}
         <footer className="w-full border-t border-white/[0.08] pt-6 pb-24">
           <p className="text-xs text-white/30 text-center md:text-left">
-            <span className="text-white/60">Emmanuel Ayeni</span> © {currentYear} All rights reserved
+            <span className="text-white/60">ELIAS E.</span> © {currentYear} All rights reserved
           </p>
         </footer>
       </div>

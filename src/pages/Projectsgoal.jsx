@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import ScrollReveal from 'scrollreveal';
-import grid from '../assets/images/OASIS.png'
-import works from '../assets/images/works.png'
+import grid from '../assets/images/cashzen.jpg'
+import works from '../assets/images/website.png'
 import designs from '../assets/images/designs.png'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Instagram, Linkedin, MessageCircle, Mail, ChevronRight } from 'lucide-react'
@@ -28,7 +28,7 @@ const PROJECT_CARDS = [
     img: works,
     label: 'EXPLORE',
     title: 'WEB APPLICATIONS',
-    desc: 'Portfolios, business sites, and products that load fast, read clearly, and hold up under real use.',
+    desc: 'Portfolios, business sites, and products that load fast, read clearly, and hold up under real use.', 
     to: '/projects/websites',
   },
   // {
@@ -51,9 +51,9 @@ const SOCIALS = [
 const Projectsgoal = () => {
 
   useEffect(() => {
-    document.title = "Moyinoluwa E. Ayeni | Portfolio";
+    document.title = "ELIAS E. | Portfolio";
     return () => {
-      document.title = "Moyinoluwa E. Ayeni";
+      document.title = "ELIAS E.";
     };
   }, []);
 
@@ -73,7 +73,7 @@ const Projectsgoal = () => {
   return (
     <div className="relative min-h-screen bg-[#0a0a0b] text-[#f2f0ec] overflow-hidden">
       <Helmet>
-        <title>Moyinoluwa E. Ayeni | Portfolio</title>
+        <title>ELIAS E. | Portfolio</title>
       </Helmet>
 
       {/* same film-grain texture as Home */}
@@ -185,7 +185,7 @@ const Projectsgoal = () => {
           </div>
 
           <div className="flex items-center justify-between mt-14 pt-6 border-t border-white/[0.08]">
-            <p className="text-sm text-white/70" style={display}>Moyinoluwa E. Ayeni</p>
+            <p className="text-sm text-white/70" style={display}>ELIAS E.</p>
             <p className="text-xs text-white/30">© {currentYear} All rights reserved</p>
           </div>
         </section>
