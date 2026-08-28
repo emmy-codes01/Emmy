@@ -77,10 +77,45 @@ import {
 const display = { fontFamily: "'Space Grotesk', 'Helvetica Neue', Arial, sans-serif" }
 const serif = { fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic' }
 
-const eyebrow = 'text-[10px] tracking-[0.24em] uppercase text-white/35 font-medium'
-const body = 'text-[15px] text-white/50 font-light leading-[1.8]'
-const navLink = 'text-sm text-white/45 hover:text-white/90 transition-colors duration-300'
+const eyebrow = 'text-[10px] lg:text-[12px] tracking-[0.24em] uppercase text-white/35 font-medium'
+const body = 'text-[15px] lg:text-[17px] text-white/50 font-light leading-[1.8]'
+const navLink = 'text-sm lg:text-base text-white/45 hover:text-white/90 transition-colors duration-300'
 const underline = 'relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-[#E8A853] hover:after:w-full after:transition-all after:duration-300'
+
+/* ---------------------------------------------------------------------
+   👉 DESKTOP MARGIN CONTROL — edit these two lines to taste.
+
+   CONTAINER_X   horizontal padding on every content wrapper (header,
+                 hero copy, and the three "max-w-[1280px]" sections).
+                 This — not max-w-[1280px] — was what made the desktop
+                 margins feel huge, because it used to jump to
+                 lg:px-14 (56px) and xl:px-16 (64px) per side, i.e. up
+                 to 128px of dead space on large screens before the
+                 1280px cap even kicks in.
+
+                 Scale reference (Tailwind spacing): px-5=20px, px-6=24px,
+                 px-8=32px, px-10=40px, px-12=48px, px-14=56px, px-16=64px.
+
+                 Want it even tighter on desktop? Lower `lg:px-10` /
+                 `xl:px-12` further (e.g. lg:px-6 xl:px-8).
+                 Want more breathing room again? Raise them back up.
+
+   CONTAINER_EDGE  same idea, used only for the "Scroll ↓" cue which is
+                   absolutely positioned from the right edge instead of
+                   padded — kept in sync with CONTAINER_X so it still
+                   lines up with the rest of the content.
+   --------------------------------------------------------------------- */
+const CONTAINER_X = 'px-5 sm:px-8 lg:px-6 xl:px-8'
+const CONTAINER_EDGE = 'right-5 sm:right-8 lg:right-6 xl:right-8'
+
+/* CONTAINER_MAX_W  the old flat "max-w-[1280px]" cap is what actually
+   pushed the header/name in from the edges on wide monitors — on a
+   1920px screen, a centered 1280px column leaves ~320px of dead space
+   on EACH side no matter how small CONTAINER_X is. Bumping the cap up
+   (or dropping it entirely past a breakpoint) is what lets content
+   reach toward the real edges of the viewport on large views.
+   Lower these numbers for a narrower page, raise/remove for wider. */
+const CONTAINER_MAX_W = 'max-w-[1280px] lg:max-w-[1680px] xl:max-w-none'
 
 const NAV = [
   { href: '#work', label: 'Work' },
@@ -729,9 +764,9 @@ function Home() {
           <HeroBackground />
         </div>
 
-        <header className="relative z-20 max-w-[1280px] w-full mx-auto px-5 sm:px-8 lg:px-14 xl:px-16 pt-8 flex items-center justify-between">
-          <span className="text-sm tracking-[0.1em]" style={display}>ELIAS E.<sup className="text-[9px] align-super">°</sup></span>
-          <div className="hidden lg:flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-white/40">
+        <header className={`relative z-20 ${CONTAINER_MAX_W} w-full mx-auto ${CONTAINER_X} pt-8 flex items-center justify-between`}>
+          <span className="text-sm lg:text-base tracking-[0.1em]" style={display}>ELIAS E.<sup className="text-[9px] align-super">°</sup></span>
+          <div className="hidden lg:flex items-center gap-2 text-[10px] lg:text-[12px] tracking-[0.2em] uppercase text-white/40">
             <span className="size-1.5 rounded-full bg-[#7CE87C] animate-pulse-soft" /> Open for work
           </div>
           <nav className="hidden lg:flex items-center gap-9">
@@ -742,25 +777,25 @@ function Home() {
           <a href="#contact" className={`lg:hidden ${navLink}`}>Menu</a>
         </header>
 
-        <div ref={heroCopyRef} className="relative z-20 max-w-[1280px] w-full mx-auto px-5 sm:px-8 lg:px-14 xl:px-16 mt-auto pb-12 lg:pb-16">
+        <div ref={heroCopyRef} className={`relative z-20 ${CONTAINER_MAX_W} w-full mx-auto ${CONTAINER_X} mt-auto pb-12 lg:pb-16`}>
           <h1 className="leading-[0.9] font-bold" style={display}>
-            <span className="block text-[16vw] sm:text-[8rem] lg:text-[8.6rem] tracking-[-0.02em]">ELIAS</span>
-            <span className="block text-[16vw] sm:text-[8rem] lg:text-[8.6rem] tracking-[-0.02em] text-white/25">
-              E.<sup className="text-[0.35em] align-super text-[#E8A853]">°</sup>
-            </span>
+            <span className="block text-[16vw] sm:text-[8rem] lg:text-[8.6rem] tracking-[-0.02em]">ELIAS<sup className="text-[0.35em] align-super text-[#E8A853]">°</sup></span>
+            {/* <span className="block text-[16vw] sm:text-[8rem] lg:text-[8.6rem] tracking-[-0.02em] text-white/25">
+              E.
+            </span> */}
           </h1>
         </div>
 
-        <a href="#about" data-cursor="SCROLL" className="scroll-cue absolute bottom-9 right-5 sm:right-8 lg:right-14 xl:right-16 z-20 flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-[#E8A853] transition-colors duration-300">
+        <a href="#about" data-cursor="SCROLL" className={`scroll-cue absolute bottom-9 ${CONTAINER_EDGE} z-20 flex items-center gap-2 text-[10px] lg:text-[12px] tracking-[0.2em] uppercase text-white/40 hover:text-[#E8A853] transition-colors duration-300`}>
           Scroll <span className="scroll-cue-arrow">↓</span>
         </a>
       </section>
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 xl:px-16">
+      <div className={`relative z-10 ${CONTAINER_MAX_W} mx-auto ${CONTAINER_X}`}>
 
         {/* ================= ABOUT ================= */}
         <section id="about" ref={aboutRef} className="reveal border-t border-white/[0.08] py-20 sm:py-28 lg:py-40">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] tracking-[0.2em] uppercase text-white/35 mb-10">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] lg:text-[13px] tracking-[0.2em] uppercase text-white/35 mb-10">
             <span>Monolith Studios°, Founder</span>
             <span className="text-white/15">/</span>
             <span>Est. 2026</span>
@@ -793,7 +828,7 @@ function Home() {
                 style={{ transitionDelay: `${i * 90}ms` }}
               >
                 <p className="text-xl md:text-2xl group-hover:text-[#E8A853] transition-colors duration-300" style={display}>{s.n}</p>
-                <p className="text-[11px] text-white/40 font-light mt-2 tracking-wide">{s.l}</p>
+                <p className="text-[11px] lg:text-[13px] text-white/40 font-light mt-2 tracking-wide">{s.l}</p>
               </div>
             ))}
           </div>
@@ -816,14 +851,14 @@ function Home() {
 
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 mt-16 lg:mt-20">
             <div className="stagger-item">
-              <h3 className="mb-3 text-[1.05rem]" style={display}>More Than A Designer</h3>
+              <h3 className="mb-3 text-[1.05rem] lg:text-[1.3rem]" style={display}>More Than A Designer</h3>
               <ScrollText
                 className={body}
                 text="I work where brand, design, and technology meetm from identity systems and visual direction to websites and web applications, handling everything from concept to execution."
               />
             </div>
             <div className="stagger-item" style={{ transitionDelay: '120ms' }}>
-              <h3 className="mb-3 text-[1.05rem]" style={display}>How I Work</h3>
+              <h3 className="mb-3 text-[1.05rem] lg:text-[1.3rem]" style={display}>How I Work</h3>
               <ScrollText
                 className={body}
                 text="I start with the problem, understand the business, then build the visual and digital system around it. The result should look right, work properly, and still make sense long after launch."
@@ -835,7 +870,7 @@ function Home() {
             {['Brand Identity', 'Art Direction', 'Web Development', 'Creative Direction', 'Brand Strategy', 'Visual Systems'].map((skill, i) => (
               <span
                 key={skill}
-                className="stagger-item text-[11px] text-white/40 border border-white/[0.1] rounded-full px-3.5 py-1.5 hover:text-[#E8A853] hover:border-[#E8A853]/40 transition-colors duration-300 cursor-default"
+                className="stagger-item text-[11px] lg:text-[13px] text-white/40 border border-white/[0.1] rounded-full px-3.5 py-1.5 hover:text-[#E8A853] hover:border-[#E8A853]/40 transition-colors duration-300 cursor-default"
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
                 {skill}
@@ -851,7 +886,7 @@ function Home() {
               <p className={eyebrow}>Selected Work</p>
               <p className="mt-2.5 text-xs text-white/30">Drag to explore →</p>
             </div>
-            <Link to="/projects/logos&brand-designs" data-cursor="OPEN" className="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-white/60 hover:text-[#E8A853] transition-colors duration-300">
+            <Link to="/projects/logos&brand-designs" data-cursor="OPEN" className="hidden sm:inline-flex items-center gap-1 text-xs lg:text-sm font-medium text-white/60 hover:text-[#E8A853] transition-colors duration-300">
               Full portfolio <ArrowRight size={13} />
             </Link>
           </div>
@@ -894,9 +929,9 @@ function Home() {
                   </div>
                   <div className="mt-6 flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/35">{w.label}</p>
+                      <p className="text-[11px] lg:text-[13px] uppercase tracking-[0.16em] text-white/35">{w.label}</p>
                       <h3 className="mt-2 text-2xl lg:text-3xl" style={display}>{w.title}</h3>
-                      <p className={`${body} mt-2.5 max-w-sm text-[13px]`}>{w.desc}</p>
+                      <p className={`${body} mt-2.5 max-w-sm text-[13px] lg:text-[15px]`}>{w.desc}</p>
                     </div>
                     <ArrowUpRight size={20} className="shrink-0 text-white/30 group-hover:text-[#E8A853] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
                   </div>
@@ -913,7 +948,7 @@ function Home() {
               <p className={eyebrow}>Brands I've Built</p>
               <p className="mt-2.5 text-xs text-white/30">Drag through the reel →</p>
             </div>
-            <Link to="/projects/logos&brand-designs" data-cursor="ALL" className="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-white/60 hover:text-[#E8A853] transition-colors duration-300">
+            <Link to="/projects/logos&brand-designs" data-cursor="ALL" className="hidden sm:inline-flex items-center gap-1 text-xs lg:text-sm font-medium text-white/60 hover:text-[#E8A853] transition-colors duration-300">
               All brands <ArrowRight size={13} />
             </Link>
           </div>
@@ -927,7 +962,7 @@ function Home() {
         <ProjectCarousel items={BRANDS} />
       </div>
 
-      <div className="relative z-10 max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-14 xl:px-16">
+      <div className={`relative z-10 ${CONTAINER_MAX_W} mx-auto ${CONTAINER_X}`}>
         {/* index of the same brands — read the names, jump straight to the case study */}
         <section ref={brandIndexRef} className="reveal pt-16 pb-20 lg:pb-32">
           <div className="flex flex-col divide-y divide-white/[0.08] border-t border-y-0 border-white/[0.08]">
@@ -943,7 +978,7 @@ function Home() {
                 <span className="flex-1 text-2xl sm:text-4xl lg:text-5xl tracking-[-0.01em] text-white/85 group-hover:text-[#E8A853] group-hover:translate-x-1.5 transition-all duration-300" style={display}>
                   {b.title}
                 </span>
-                <span className="hidden sm:block text-[11px] uppercase tracking-[0.16em] text-white/30 shrink-0">{b.tag}</span>
+                <span className="hidden sm:block text-[11px] lg:text-[13px] uppercase tracking-[0.16em] text-white/30 shrink-0">{b.tag}</span>
                 <ArrowUpRight size={20} className="shrink-0 text-white/25 group-hover:text-[#E8A853] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
               </Link>
             ))}
@@ -973,7 +1008,7 @@ function Home() {
             </a> */}
             <Link
               to="/workwithme"
-              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white border border-white/[0.1] hover:border-[#E8A853]/50 rounded-full px-6 py-3.5 transition-colors duration-300"
+              className="inline-flex items-center gap-2 text-sm lg:text-base text-white/60 hover:text-white border border-white/[0.1] hover:border-[#E8A853]/50 rounded-full px-6 py-3.5 transition-colors duration-300"
             >
               <MessageCircle size={15} /> Write to Me
             </Link>
@@ -996,7 +1031,7 @@ function Home() {
             <a href="https://linkedin.com/in/emmanuel-ayeni01" className="opacity-60 hover:opacity-100 transition-opacity duration-300">
               <img src={signature} alt="Signature" className="h-16" />
             </a>
-            <p className="text-xs text-white/30">© {currentYear} Elias E.</p>
+            <p className="text-xs lg:text-sm text-white/30">© {currentYear} Elias E.</p>
           </div>
         </section>
       </div>
@@ -1126,6 +1161,7 @@ function Home() {
           padding: 0 clamp(20px, 5vw, 64px);
           font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.4);
         }
+        @media (min-width: 1024px) { .pc-top { font-size: 12px; } }
         .pc-count { color: rgba(255,255,255,0.28); font-variant-numeric: tabular-nums; letter-spacing: 0.14em; }
 
         /* mouse-driven parallax wrapper — sits between the stage and the
@@ -1197,6 +1233,11 @@ function Home() {
         .pc-num { font-size: 11px; opacity: 0.5; }
         .pc-title { font-size: 15px; letter-spacing: 0.01em; line-height: 1.2; }
         .pc-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); margin-top: 3px; }
+        @media (min-width: 1024px) {
+          .pc-num { font-size: 13px; }
+          .pc-title { font-size: 19px; }
+          .pc-tag { font-size: 12px; }
+        }
         .pc-card:not(.is-active) .pc-card-info { opacity: 0; transform: translateY(6px); transition: opacity 0.4s ease, transform 0.4s ease; }
         .pc-card.is-active .pc-card-info { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s; }
 
@@ -1233,6 +1274,7 @@ function Home() {
         }
         .pc-arrow:hover { color: #E8A853; border-color: rgba(232,168,83,0.5); }
         .pc-hint { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+        @media (min-width: 1024px) { .pc-hint { font-size: 12px; } }
 
         /* brand index rows */
         .brand-row {

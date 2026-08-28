@@ -73,7 +73,7 @@ const BottomMenu = () => {
   };
 
   return (
-    <div className="fixed bottom-5 left-0 right-0 z-50 flex justify-center items-center px-4 animate-float">
+    <div className="fixed bottom-5 left-0 right-0 z-50 lg:flex justify-center items-center px-4 animate-float hidden">
       <div
         className={`relative backdrop-blur-xl bg-white/[0.04] border border-white/[0.1] rounded-3xl transition-all duration-300 flex items-center ${
           isExpanded ? 'py-2 px-5 w-full max-w-md border-[#E8A853]/20' : 'p-1'
