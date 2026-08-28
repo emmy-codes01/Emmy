@@ -13,7 +13,7 @@ import cap from '../assets/images/RCR/cap.png'
 import image from '../assets/images/RCR/image.png'
 import iphone from '../assets/images/RCR/iphone.png'
 import offwhite from '../assets/images/RCR/offwhite.png'
-import banner from '../assets/images/RCR/banner.png'
+import banner from '../assets/images/RCR/BANNER.png'
 import city from '../assets/images/RCR/city.png'
 
 /* ---------------------------------------------------------
