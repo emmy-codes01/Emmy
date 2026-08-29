@@ -78,7 +78,7 @@ const display = { fontFamily: "'Space Grotesk', 'Helvetica Neue', Arial, sans-se
 const serif = { fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: 'italic' }
 
 const eyebrow = 'text-[10px] lg:text-[12px] tracking-[0.24em] uppercase text-white/35 font-medium'
-const body = 'text-[15px] lg:text-[17px] text-white/50 font-light leading-[1.8]'
+const body = 'text-[15px] lg:text-[17px] text-white/50 font-light'
 const navLink = 'text-sm lg:text-base text-white/45 hover:text-white/90 transition-colors duration-300'
 const underline = 'relative after:absolute after:left-0 after:-bottom-0.5 after:h-px after:w-0 after:bg-[#E8A853] hover:after:w-full after:transition-all after:duration-300'
 
@@ -384,7 +384,16 @@ function DragRail({ children }) {
   )
 }
 
-/* ---------- scroll-scrubbed paragraph — dims to 20%, lights to 100% as it passes the reading band ---------- */
+/* ---------- scroll-scrubbed paragraph — dims to 20%, lights to 100% as it passes the reading band ----------
+   Each word is a separate inline-block span so its opacity can be driven
+   independently as it crosses the reading band. IMPORTANT: a browser's
+   shrink-to-fit width calculation for inline-block boxes collapses
+   trailing whitespace, so putting the space *inside* the span (as we used
+   to) silently loses its width and the words visually run together. The
+   fix is to keep the space as a normal text node *between* the spans
+   (not inside them) and additionally give each word a small right margin
+   as a safety net, so spacing survives regardless of how the browser
+   handles inline-block whitespace collapsing. */
 function ScrollText({ text, className = '' }) {
   const containerRef = useRef(null)
   const wordRefs = useRef([])
@@ -435,13 +444,15 @@ function ScrollText({ text, className = '' }) {
   return (
     <p ref={containerRef} className={className}>
       {words.map((w, i) => (
-        <span
-          key={i}
-          ref={(el) => (wordRefs.current[i] = el)}
-          className="scroll-word"
-        >
-          {w}{' '}
-        </span>
+        <React.Fragment key={i}>
+          <span
+            ref={(el) => (wordRefs.current[i] = el)}
+            className="scroll-word"
+          >
+            {w}
+          </span>
+          {i < words.length - 1 ? ' ' : null}
+        </React.Fragment>
       ))}
     </p>
   )
@@ -1081,8 +1092,11 @@ function Home() {
         .scroll-cue-arrow { display: inline-block; animation: cue-bob 1.8s ease-in-out infinite; }
         @keyframes cue-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 
-        /* scroll-scrubbed words */
-        .scroll-word { display: inline-block; opacity: 0.2; transition: opacity 0.1s linear; will-change: opacity; }
+        /* scroll-scrubbed words — inline-block so opacity can be driven per
+           word, plus a small right margin as a spacing safety net (the
+           space text node between spans already provides a normal gap,
+           this just guarantees it never visually collapses) */
+        .scroll-word { display: inline-block; opacity: 0.2; margin-right: 0.28em; transition: opacity 0.1s linear; will-change: opacity; }
 
         /* custom cursor */
         .custom-cursor {
